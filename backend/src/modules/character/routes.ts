@@ -1,6 +1,7 @@
 import { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import { CharacterCreationSchema } from '../../../../src/shared/schemas/character';
 import type { Character } from '../../../../src/shared/types/character';
+import { getEvolutionTitle } from '../../../../src/shared/constants/evolution';
 
 // In-memory store for backend test validation and offline development
 export const charactersByUserId = new Map<string, Character>();
@@ -57,6 +58,9 @@ export const characterRoutes: FastifyPluginAsync = async (app: FastifyInstance) 
       lifeFocus,
       xp: 0,
       level: 1,
+      skillPoints: 0,
+      evolutionTier: 1,
+      evolutionTitle: getEvolutionTitle(avatar, 1),
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

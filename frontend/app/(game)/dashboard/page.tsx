@@ -40,6 +40,9 @@ import { QuestCategoryBadge } from '@/components/quests/quest-category';
 import { StreakCard } from '@/components/streak/streak-card';
 import { StreakCalendar } from '@/components/streak/streak-calendar';
 import { QuestChainCard } from '@/components/quests/quest-chain-card';
+import { useAttributes } from '@/features/attributes/use-attributes';
+import { useSkillTree } from '@/features/skill-tree/use-skill-tree';
+import { EvolutionBadge } from '@/components/character/evolution-badge';
 
 const AVATAR_ICONS: Record<string, LucideIcon> = {
   Shield,
@@ -55,6 +58,8 @@ export default function DashboardPage() {
   const { character, fetchCharacter } = useCharacter();
   const { allQuests, loading: questsLoading } = useQuests();
   const { chains, loading: chainsLoading } = useQuestChains();
+  const { evolution } = useAttributes();
+  const { treeData } = useSkillTree();
 
   React.useEffect(() => {
     if (user && !character) {
@@ -96,7 +101,12 @@ export default function DashboardPage() {
                     Level {charLevel}
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground mt-0.5">
+                {evolution && (
+                  <div className="mt-1">
+                    <EvolutionBadge evolution={evolution} size="sm" />
+                  </div>
+                )}
+                <p className="text-xs text-muted-foreground mt-1">
                   Archetype: <span className="font-semibold text-foreground">{avatarInfo.name}</span> &bull; Focus:{' '}
                   <span className="font-semibold text-foreground capitalize">
                     {character?.lifeFocus || 'Learning'}
@@ -282,24 +292,84 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* 6. Future Expansion Modules Preview */}
+        {/* 6. Character Progression & Capability Attunement */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold tracking-tight text-foreground">
+              Character & Capability Progression
+            </h3>
+            <span className="text-xs text-muted-foreground font-mono">
+              Phase 5 Active
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Link href="/character">
+              <Card variant="interactive" className="h-full group">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                        <Shield className="h-5 w-5" />
+                      </div>
+                      <CardTitle className="text-base group-hover:text-primary transition-colors">
+                        Character Sheet & Attributes
+                      </CardTitle>
+                    </div>
+                    <Badge variant="rpg" size="sm">
+                      View
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-xs mt-2">
+                    Inspect your 6 lifestyle disciplines, polygonal attribute radar, and ascension path.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            <Link href="/skill-tree">
+              <Card variant="interactive" className="h-full group">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                        <GitFork className="h-5 w-5" />
+                      </div>
+                      <CardTitle className="text-base group-hover:text-primary transition-colors">
+                        Branching Skill Tree
+                      </CardTitle>
+                    </div>
+                    <Badge variant="rpg" size="sm">
+                      {treeData?.availableSkillPoints ?? 0} SP Available
+                    </Badge>
+                  </div>
+                  <CardDescription className="text-xs mt-2">
+                    Attune passive capability multipliers and specialize across your attribute branches.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+          </div>
+        </div>
+
+        {/* 7. Future Expansion Modules Preview */}
         <div>
           <h3 className="text-lg font-bold tracking-tight text-foreground mb-4">
             Upcoming Expansion Modules
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Skill Tree & Boss Quests */}
+            {/* Boss Quests */}
             <Card variant="muted">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
-                  <GitFork className="h-5 w-5 text-emerald-500" />
+                  <Flame className="h-5 w-5 text-amber-500" />
                   <Badge variant="neutral" size="sm">
-                    Phase 5
+                    Upcoming
                   </Badge>
                 </div>
-                <CardTitle className="text-base mt-2">Skill Tree & Boss Battles</CardTitle>
+                <CardTitle className="text-base mt-2">Boss Milestone Battles</CardTitle>
                 <CardDescription className="text-xs">
-                  Category mastery branches, attribute evolution, and epic boss milestones.
+                  Multi-stage epic challenges, countdown deadlines, and massive XP bounties.
                 </CardDescription>
               </CardHeader>
             </Card>

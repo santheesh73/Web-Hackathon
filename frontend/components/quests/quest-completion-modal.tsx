@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { CheckCircle2, Sparkles, Trophy, ArrowRight, Flame, Layers } from 'lucide-react';
+import { CheckCircle2, Sparkles, Trophy, ArrowRight, Flame, Layers, Zap, Crown } from 'lucide-react';
 import { Dialog } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -118,6 +118,61 @@ export function QuestCompletionModal({
                 ? 'Mastery Achieved! Entire quest chain completed!'
                 : `Step ${chainProgress.completedStepOrder} completed. Next step unlocked!`}
             </p>
+          </div>
+        )}
+
+        {/* Attribute Progression Feedback */}
+        {result.attributeGain && (
+          <div className="p-3 rounded-xl border border-border/80 bg-muted/30 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 w-4 text-indigo-500" />
+              <div>
+                <span className="font-semibold text-foreground">
+                  +{result.attributeGain.xpGained} {result.attributeGain.attributeKey} XP
+                </span>
+                {result.attributeGain.leveledUp && (
+                  <span className="text-emerald-600 dark:text-emerald-400 font-bold block text-[11px]">
+                    Attribute Leveled Up to Level {result.attributeGain.newLevel}! (+1 SP)
+                  </span>
+                )}
+              </div>
+            </div>
+            <Badge variant="neutral" size="sm" className="font-mono text-[10px]">
+              Lvl {result.attributeGain.newLevel}
+            </Badge>
+          </div>
+        )}
+
+        {/* Skill Points Reward if earned */}
+        {result.skillPointsEarned && result.skillPointsEarned > 0 && (
+          <div className="p-3 rounded-xl border border-amber-300 dark:border-amber-800 bg-amber-50/70 dark:bg-amber-950/40 flex items-center justify-between text-xs text-amber-900 dark:text-amber-200">
+            <div className="flex items-center gap-2 font-bold">
+              <Sparkles className="h-4 w-4 text-amber-500" />
+              <span>+{result.skillPointsEarned} Skill Point{result.skillPointsEarned > 1 ? 's' : ''} Earned!</span>
+            </div>
+            <span className="font-mono text-[11px]">
+              Total SP: {result.unspentSkillPoints ?? result.character.skillPoints}
+            </span>
+          </div>
+        )}
+
+        {/* Evolution Ascension if triggered */}
+        {result.evolution && result.evolution.evolved && (
+          <div className="p-3.5 rounded-xl border border-purple-300 dark:border-purple-800 bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/40 dark:to-indigo-950/40 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <Crown className="h-5 w-5 text-purple-600 dark:text-purple-400 animate-bounce" />
+              <div>
+                <span className="font-bold text-purple-900 dark:text-purple-200 block">
+                  Ascension: {result.evolution.title}!
+                </span>
+                <span className="text-purple-700 dark:text-purple-300 text-[11px]">
+                  Achieved Tier {result.evolution.tier} ({result.evolution.tierName}) rank!
+                </span>
+              </div>
+            </div>
+            <Badge variant="rpg" size="sm">
+              Tier {result.evolution.tier}
+            </Badge>
           </div>
         )}
 

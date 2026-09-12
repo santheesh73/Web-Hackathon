@@ -3,7 +3,7 @@
 A full-stack web application that transforms real-life productivity into an RPG-style progression experience.
 
 ## Project Status
-**Phase 4 — Streaks, Streak Calendar, Streak Recovery & Quest Chains Complete**
+**Phase 5 — Character Progression Layer (Attributes, Skill Tree & Evolution) Complete**
 
 ## Architecture
 
@@ -25,7 +25,7 @@ Shared TypeScript contracts are maintained under `src/shared/` to provide end-to
 - **Backend**: Fastify, Node.js, TypeScript, Zod
 - **Database & Auth**: Supabase PostgreSQL with Row Level Security (RLS) & RPC Functions
 - **Shared**: TypeScript contracts (`src/shared`)
-- **Testing**: Vitest (52 tests passing)
+- **Testing**: Vitest (69 tests passing)
 
 ## Development
 
@@ -55,6 +55,10 @@ npm run dev:backend
 # Progression: http://localhost:4000/progression
 # Streaks & Calendar: http://localhost:4000/streak
 # Quest Chains: http://localhost:4000/quest-chains
+# Attributes: http://localhost:4000/character/attributes
+# Evolution: http://localhost:4000/character/evolution
+# Skill Tree: http://localhost:4000/skill-tree
+# Skill Unlock: http://localhost:4000/skill-tree/unlock
 ```
 
 #### Run Frontend Only
@@ -66,6 +70,8 @@ npm run dev:frontend
 # Signup: http://localhost:3000/signup
 # Character Creation: http://localhost:3000/character-creation
 # Dashboard: http://localhost:3000/dashboard
+# Character Sheet: http://localhost:3000/character
+# Skill Tree: http://localhost:3000/skill-tree
 # Quest Board: http://localhost:3000/quests
 # Create Quest: http://localhost:3000/quests/create
 # Quest Details: http://localhost:3000/quests/:questId
@@ -76,7 +82,7 @@ npm run dev:frontend
 
 ### Running Tests & Quality Checks
 ```bash
-# Run backend unit and integration tests (52 tests)
+# Run backend unit and integration tests (69 tests)
 npm run test
 
 # Run linter across all workspaces (0 warnings, 0 errors)

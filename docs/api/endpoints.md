@@ -224,3 +224,141 @@
 - **Description**: Retrieves a single quest chain with all steps, step statuses, and quest metadata.
 - **Response (200 OK)**: `QuestChainWithSteps` object.
 - **Response (404 Not Found)**: If chain does not exist or belongs to another user.
+
+---
+
+### Character Attributes
+- **Method**: `GET`
+- **Path**: `/character/attributes`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Retrieves all 6 lifestyle character attributes (`STRENGTH`, `INTELLIGENCE`, `DISCIPLINE`, `WISDOM`, `CREATIVITY`, `RESILIENCE`) with current XP, levels, and level-progress calculations.
+- **Response (200 OK)**:
+  ```json
+  {
+    "attributes": [
+      {
+        "id": "attr-demo-strength",
+        "characterId": "char-demo",
+        "userId": "demo-user",
+        "attributeKey": "STRENGTH",
+        "xp": 125,
+        "level": 2,
+        "createdAt": "2026-09-12T00:00:00.000Z",
+        "updatedAt": "2026-09-12T00:00:00.000Z"
+      }
+    ],
+    "progress": {
+      "STRENGTH": {
+        "attributeKey": "STRENGTH",
+        "level": 2,
+        "xp": 125,
+        "currentLevelBaseXp": 50,
+        "nextLevelXp": 150,
+        "xpInCurrentLevel": 75,
+        "xpNeededForNextLevel": 100,
+        "progressPercent": 75
+      }
+    }
+  }
+  ```
+
+### Character Evolution
+- **Method**: `GET`
+- **Path**: `/character/evolution`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Retrieves character evolution profile, current ascension tier (1 to 4), archetype title, frame/aura classes, and next tier milestone requirements.
+- **Response (200 OK)**:
+  ```json
+  {
+    "evolution": {
+      "tier": 2,
+      "title": "Blade Vanguard",
+      "archetype": "warrior",
+      "avatar": "warrior",
+      "frameClass": "border-indigo-200 bg-indigo-50/30",
+      "auraClass": "ring-2 ring-indigo-400/60 shadow-md",
+      "tierName": "Adept",
+      "unlockedPerks": [],
+      "nextTier": {
+        "tier": 3,
+        "minLevel": 10,
+        "minSkills": 6,
+        "minAttributeLevel": 5,
+        "levelMet": false,
+        "skillsMet": false,
+        "attributesMet": false,
+        "allMet": false,
+        "progressPercent": 35
+      }
+    }
+  }
+  ```
+
+---
+
+### Skill Tree Data
+- **Method**: `GET`
+- **Path**: `/skill-tree`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Retrieves all 18 skill nodes across 6 attribute branches with user unlock status, availability state, and missing prerequisites.
+- **Response (200 OK)**:
+  ```json
+  {
+    "availableSkillPoints": 2,
+    "spentSkillPoints": 1,
+    "totalSkillPoints": 3,
+    "unlockedSkillIds": ["str_t1_endurance"],
+    "branches": [
+      {
+        "attributeKey": "STRENGTH",
+        "label": "Strength & Vitality",
+        "skills": [
+          {
+            "id": "str_t1_endurance",
+            "attributeKey": "STRENGTH",
+            "tier": 1,
+            "title": "Endurance Engine",
+            "description": "Optimize metabolic stamina, physical recovery, and baseline vitality.",
+            "spCost": 1,
+            "requiredAttributeLevel": 1,
+            "prerequisiteSkillId": null,
+            "iconName": "Heart",
+            "perkEffect": "+5% XP gained on Health quests",
+            "isUnlocked": true,
+            "canUnlock": false,
+            "missingRequirements": []
+          }
+        ]
+      }
+    ]
+  }
+  ```
+
+### Skill Unlock (Attunement)
+- **Method**: `POST`
+- **Path**: `/skill-tree/unlock`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Description**: Server-authoritative unlocking of a skill node. Validates available SP, required attribute level, and prerequisite unlocks. Recalculates evolution tier.
+- **Request Body**:
+  ```json
+  {
+    "skillId": "str_t1_endurance"
+  }
+  ```
+- **Response (200 OK)**:
+  ```json
+  {
+    "success": true,
+    "skillId": "str_t1_endurance",
+    "unlockedSkillTitle": "Endurance Engine",
+    "availableSkillPoints": 1,
+    "spentSkillPoints": 1,
+    "unlockedSkillIds": ["str_t1_endurance"],
+    "evolutionTier": 1,
+    "evolutionTitle": "Vanguard Recruit",
+    "newEvolutionUnlocked": false
+  }
+  ```
+- **Response (400 Bad Request)**: Insufficient SP, attribute level requirement not met, or prerequisite skill locked.
+- **Response (409 Conflict)**: Skill is already unlocked.
+

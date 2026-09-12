@@ -22,6 +22,26 @@ import {
   saveSteps,
   saveChain,
 } from '../quest-chains/routes';
+import {
+  CATEGORY_TO_ATTRIBUTE_MAP,
+  getAttributeLevelFromXp,
+} from '../../../../src/shared/constants/attributes';
+import {
+  calculateEvolutionTier,
+  getEvolutionTitle,
+  TIER_NAMES,
+} from '../../../../src/shared/constants/evolution';
+import {
+  getAttributeByKey,
+  saveCharacterAttribute,
+  getCharacterAttributes,
+} from '../attributes/routes';
+import { getUnlockedSkills } from '../skill-tree/routes';
+import type { AttributeGainResult } from '../../../../src/shared/types/attribute';
+import type {
+  EvolutionCalculationResult,
+  EvolutionTier,
+} from '../../../../src/shared/types/evolution';
 
 const CompleteQuestBodySchema = z.object({
   questId: z.string().min(1, 'Quest ID is required'),
@@ -101,6 +121,9 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
           lifeFocus: 'health',
           xp: 0,
           level: 1,
+          skillPoints: 0,
+          evolutionTier: 1,
+          evolutionTitle: 'Initiate',
           createdAt: completedAt,
           updatedAt: completedAt,
         };
@@ -111,11 +134,62 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
     const newXp = previousXp + xpAwarded;
     const newLevel = getLevelFromXp(newXp);
     const leveledUp = newLevel > previousLevel;
+    const charSpGain = leveledUp ? newLevel - previousLevel : 0;
 
+    // 5a. Attribute XP & Level processing
+    const attrKey = CATEGORY_TO_ATTRIBUTE_MAP[quest.category] || 'STRENGTH';
+    const userAttr = getAttributeByKey(userId, attrKey);
+    const oldAttrLevel = userAttr.level;
+    const newAttrXp = userAttr.xp + xpAwarded;
+    const newAttrLevel = getAttributeLevelFromXp(newAttrXp);
+    const attrLeveledUp = newAttrLevel > oldAttrLevel;
+    const attrSpGain = attrLeveledUp ? newAttrLevel - oldAttrLevel : 0;
+
+    userAttr.xp = newAttrXp;
+    userAttr.level = newAttrLevel;
+    userAttr.updatedAt = completedAt;
+    saveCharacterAttribute(userId, userAttr);
+
+    // 5b. Skill points and Evolution calculation
+    const totalSpEarned = attrSpGain + charSpGain;
+    const currentSp = (character.skillPoints ?? 0) + totalSpEarned;
+    character.skillPoints = currentSp;
+
+    const unlockedSkills = getUnlockedSkills(userId);
+    const allUserAttrs = getCharacterAttributes(userId);
+    const maxAttrLevel = Math.max(...allUserAttrs.map((a) => a.level), 1);
+    const previousEvolutionTier = character.evolutionTier ?? 1;
+    const newEvolutionTier = calculateEvolutionTier(
+      newLevel,
+      unlockedSkills.length,
+      maxAttrLevel
+    );
+    const newEvolutionTitle = getEvolutionTitle(character.avatar, newEvolutionTier);
+    const evolved = newEvolutionTier > previousEvolutionTier;
+
+    character.evolutionTier = newEvolutionTier;
+    character.evolutionTitle = newEvolutionTitle;
     character.xp = newXp;
     character.level = newLevel;
     character.updatedAt = completedAt;
     saveCharacter(character);
+
+    const attributeGain: AttributeGainResult = {
+      attributeKey: attrKey,
+      xpGained: xpAwarded,
+      previousLevel: oldAttrLevel,
+      newLevel: newAttrLevel,
+      leveledUp: attrLeveledUp,
+      skillPointsEarned: attrSpGain,
+    };
+
+    const evolution: EvolutionCalculationResult = {
+      tier: newEvolutionTier,
+      title: newEvolutionTitle,
+      tierName: TIER_NAMES[newEvolutionTier],
+      evolved,
+      previousTier: (previousEvolutionTier || 1) as EvolutionTier,
+    };
 
     // 6. Streak and Daily Activity processing
     const today = getUtcTodayString();
@@ -227,6 +301,10 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
         isNewRecord,
       },
       chainProgress,
+      attributeGain,
+      skillPointsEarned: totalSpEarned,
+      unspentSkillPoints: currentSp,
+      evolution,
     };
 
     return reply.status(200).send(result);

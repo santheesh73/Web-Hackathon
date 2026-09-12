@@ -52,6 +52,9 @@ export function useCharacter(): CharacterContextType {
               lifeFocus: data.life_focus,
               xp: data.xp ?? 0,
               level: data.level ?? 1,
+              skillPoints: data.skill_points ?? 0,
+              evolutionTier: data.evolution_tier ?? 1,
+              evolutionTitle: data.evolution_title ?? 'Initiate',
               createdAt: data.created_at,
               updatedAt: data.updated_at,
             };
@@ -146,6 +149,9 @@ export function useCharacter(): CharacterContextType {
           lifeFocus: data.life_focus,
           xp: 0,
           level: 1,
+          skillPoints: 0,
+          evolutionTier: 1,
+          evolutionTitle: 'Initiate',
           createdAt: data.created_at,
           updatedAt: data.updated_at,
         };
@@ -172,6 +178,9 @@ export function useCharacter(): CharacterContextType {
           lifeFocus: input.lifeFocus,
           xp: 0,
           level: 1,
+          skillPoints: 0,
+          evolutionTier: 1,
+          evolutionTitle: 'Initiate',
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };

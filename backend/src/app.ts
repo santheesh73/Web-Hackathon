@@ -7,6 +7,8 @@ import { questRoutes } from './modules/quests/routes';
 import { progressionRoutes } from './modules/progression/routes';
 import { streakRoutes } from './modules/streak/routes';
 import { questChainRoutes } from './modules/quest-chains/routes';
+import { attributeRoutes } from './modules/attributes/routes';
+import { skillTreeRoutes } from './modules/skill-tree/routes';
 
 export function buildApp(): FastifyInstance {
   const app = Fastify({
@@ -35,6 +37,8 @@ export function buildApp(): FastifyInstance {
   app.register(progressionRoutes);
   app.register(streakRoutes);
   app.register(questChainRoutes);
+  app.register(attributeRoutes);
+  app.register(skillTreeRoutes);
 
   return app;
 }

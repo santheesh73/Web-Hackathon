@@ -22,6 +22,9 @@ export interface Character {
   lifeFocus: LifeFocus;
   xp: number;
   level: number;
+  skillPoints: number;
+  evolutionTier: number;
+  evolutionTitle: string;
   createdAt: string;
   updatedAt: string;
 }

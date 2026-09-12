@@ -1,4 +1,6 @@
 import type { Character } from './character';
+import type { AttributeGainResult } from './attribute';
+import type { EvolutionCalculationResult } from './evolution';
 
 export type QuestCategory =
   | 'Health'
@@ -35,4 +37,8 @@ export interface QuestCompletionResult {
   previousLevel: number;
   newLevel: number;
   leveledUp: boolean;
+  attributeGain?: AttributeGainResult;
+  skillPointsEarned?: number;
+  unspentSkillPoints?: number;
+  evolution?: EvolutionCalculationResult;
 }

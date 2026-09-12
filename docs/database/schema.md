@@ -107,6 +107,37 @@ Stores the ordered sequence of quest steps in a chain with sequential locking.
 - `UNIQUE(chain_id, step_order)` ensures deterministic step numbering.
 - `UNIQUE(chain_id, quest_id)` prevents the same quest from appearing twice in a chain.
 
+### `public.character_attributes` (Phase 5)
+Stores lifestyle discipline progression for each of the 6 core attributes.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `UUID` | `PRIMARY KEY DEFAULT gen_random_uuid()` | Unique attribute identifier |
+| `character_id` | `UUID` | `NOT NULL REFERENCES public.characters(id) ON DELETE CASCADE` | Parent character ID |
+| `user_id` | `UUID` | `NOT NULL REFERENCES public.characters(user_id) ON DELETE CASCADE` | Owner user ID |
+| `attribute_key` | `VARCHAR(30)` | `CHECK IN ('STRENGTH', 'INTELLIGENCE', 'DISCIPLINE', 'WISDOM', 'CREATIVITY', 'RESILIENCE')` | Discipline identifier |
+| `xp` | `INTEGER` | `NOT NULL DEFAULT 0 CHECK (xp >= 0)` | Attribute XP gained |
+| `level` | `INTEGER` | `NOT NULL DEFAULT 1 CHECK (level >= 1)` | Current attribute level |
+| `created_at` | `TIMESTAMPTZ` | `NOT NULL DEFAULT now()` | Creation timestamp |
+| `updated_at` | `TIMESTAMPTZ` | `NOT NULL DEFAULT now()` | Last update timestamp |
+
+**Constraint**: `UNIQUE(character_id, attribute_key)` guarantees exactly one tracker per attribute per character.
+
+---
+
+### `public.character_skills` (Phase 5)
+Stores permanently unlocked capability nodes from the skill tree.
+
+| Column | Type | Constraints | Description |
+| :--- | :--- | :--- | :--- |
+| `id` | `UUID` | `PRIMARY KEY DEFAULT gen_random_uuid()` | Unique unlock record ID |
+| `character_id` | `UUID` | `NOT NULL REFERENCES public.characters(id) ON DELETE CASCADE` | Parent character ID |
+| `user_id` | `UUID` | `NOT NULL REFERENCES public.characters(user_id) ON DELETE CASCADE` | Owner user ID |
+| `skill_id` | `VARCHAR(50)` | `NOT NULL` | Static skill identifier |
+| `unlocked_at` | `TIMESTAMPTZ` | `NOT NULL DEFAULT now()` | Attunement timestamp |
+
+**Constraint**: `UNIQUE(character_id, skill_id)` prevents duplicate skill purchases.
+
 ---
 
 ## Stored Procedures & Functions
@@ -120,19 +151,43 @@ Deterministic level calculation function:
 - Level 5: 700–999 XP
 - Level 6+: `6 + FLOOR((p_xp - 1000) / 350)`
 
+### `calculate_attribute_level(p_xp INTEGER) -> INTEGER` (Phase 5)
+Deterministic attribute level curve:
+- Level 1: 0–49 XP
+- Level 2: 50–149 XP
+- Level 3: 150–299 XP
+- Level 4: 300–499 XP
+- Level 5: 500–749 XP
+- Level 6+: `6 + FLOOR((p_xp - 750) / 250)`
+
+### `calculate_evolution_tier(p_level INT, p_skills INT, p_max_attr INT) -> INTEGER` (Phase 5)
+Calculates character ascension tier (1 to 4):
+- Tier 4 (Paragon): Level $\ge$ 20, Skills $\ge$ 10, Max Attribute Level $\ge$ 7
+- Tier 3 (Master): Level $\ge$ 10, Skills $\ge$ 6, Max Attribute Level $\ge$ 5
+- Tier 2 (Adept): Level $\ge$ 5, Skills $\ge$ 3, Max Attribute Level $\ge$ 3
+- Tier 1 (Initiate): Default baseline
+
+### `unlock_skill(p_skill_id, p_sp_cost, p_required_attr_level, p_attr_key) -> JSONB` (Phase 5)
+Server-authoritative skill attunement:
+1. Asserts skill not already unlocked.
+2. Asserts character has sufficient available skill points (`skill_points >= sp_cost`).
+3. Asserts required attribute level prerequisite is satisfied.
+4. Deducts SP, records unlock in `character_skills`.
+5. Recalculates evolution tier and title.
+6. Returns consolidated unlock status.
+
 ### `recover_streak() -> JSONB`
-Server-controlled procedure to restore a streak:
-1. Asserts user has missed exactly 1 day (`last_activity_date = yesterday - 1 day`).
-2. Asserts `recovery_available = true`.
-3. Injects a recovery activity record for yesterday into `streak_activities`.
-4. Sets `current_streak = current_streak + 1`, `last_activity_date = yesterday`, `recovery_available = false`.
+Server-controlled procedure to restore a streak when exactly 1 day was missed.
 
 ### `complete_quest(p_quest_id UUID) -> JSONB`
 Atomic multi-system transaction:
 1. Validates quest is `ACTIVE`.
-2. Validates linked quest chain step (if any) is `AVAILABLE` (rejects locked steps with error code `P0006`).
+2. Validates linked quest chain step (if any) is `AVAILABLE` (rejects locked steps with `P0006`).
 3. Sets quest status `COMPLETED`.
-4. Increments character XP and calculates new level.
-5. Upserts daily activity into `streak_activities`. If first quest today, checks if yesterday was active &rarr; increments `current_streak` or resets to 1; updates `longest_streak`.
-6. If part of a chain: marks step `COMPLETED`, unlocks step $N+1$ (`AVAILABLE`), or marks entire chain `COMPLETED` if final step.
-7. Returns consolidated JSON payload.
+4. Increments character XP and calculates new level (+1 SP if character leveled up).
+5. Maps quest category to attribute key, awards attribute XP, and calculates new attribute level (+1 SP if attribute leveled up).
+6. Updates character `skill_points`.
+7. Recalculates character evolution tier and title.
+8. Upserts daily activity into `streak_activities`. Increments or resets streak.
+9. If part of a chain: marks step `COMPLETED`, unlocks step $N+1$ (`AVAILABLE`), or marks chain `COMPLETED`.
+10. Returns consolidated progression payload.
