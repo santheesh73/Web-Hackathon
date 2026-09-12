@@ -3,7 +3,7 @@
 A full-stack web application that transforms real-life productivity into an RPG-style progression experience.
 
 ## Project Status
-**Phase 3 — Quests, Quest Completion & Basic XP Progression Complete**
+**Phase 4 — Streaks, Streak Calendar, Streak Recovery & Quest Chains Complete**
 
 ## Architecture
 
@@ -25,7 +25,7 @@ Shared TypeScript contracts are maintained under `src/shared/` to provide end-to
 - **Backend**: Fastify, Node.js, TypeScript, Zod
 - **Database & Auth**: Supabase PostgreSQL with Row Level Security (RLS) & RPC Functions
 - **Shared**: TypeScript contracts (`src/shared`)
-- **Testing**: Vitest (34 tests passing)
+- **Testing**: Vitest (52 tests passing)
 
 ## Development
 
@@ -53,6 +53,8 @@ npm run dev:backend
 # Health check: http://localhost:4000/health
 # Quests: http://localhost:4000/quests
 # Progression: http://localhost:4000/progression
+# Streaks & Calendar: http://localhost:4000/streak
+# Quest Chains: http://localhost:4000/quest-chains
 ```
 
 #### Run Frontend Only
@@ -67,11 +69,14 @@ npm run dev:frontend
 # Quest Board: http://localhost:3000/quests
 # Create Quest: http://localhost:3000/quests/create
 # Quest Details: http://localhost:3000/quests/:questId
+# Quest Chains: http://localhost:3000/quests/chains
+# Create Quest Chain: http://localhost:3000/quests/chains/create
+# Quest Chain Roadmap: http://localhost:3000/quests/chains/:chainId
 ```
 
 ### Running Tests & Quality Checks
 ```bash
-# Run backend unit and integration tests (34 tests)
+# Run backend unit and integration tests (52 tests)
 npm run test
 
 # Run linter across all workspaces (0 warnings, 0 errors)

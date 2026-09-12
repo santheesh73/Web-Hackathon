@@ -1,7 +1,7 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
-import { CheckCircle2, Sparkles, Trophy, ArrowRight } from 'lucide-react';
+import { CheckCircle2, Sparkles, Trophy, ArrowRight, Flame, Layers } from 'lucide-react';
 import { Dialog } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,7 +9,24 @@ import type { QuestCompletionResult } from '@/../src/shared/types/quest';
 
 export interface QuestCompletionModalProps {
   open: boolean;
-  result: QuestCompletionResult | null;
+  result: (QuestCompletionResult & {
+    streak?: {
+      currentStreak: number;
+      longestStreak: number;
+      firstToday: boolean;
+      streakExtended: boolean;
+      isNewRecord: boolean;
+    };
+    chainProgress?: {
+      chainId: string;
+      chainTitle: string;
+      completedStepOrder: number;
+      totalSteps: number;
+      completedSteps: number;
+      isChainCompleted: boolean;
+      nextStepOrder?: number;
+    } | null;
+  }) | null;
   onClose: () => void;
   onOpenLevelUp?: (newLevel: number, xpAwarded: number) => void;
 }
@@ -28,6 +45,9 @@ export function QuestCompletionModal({
       onOpenLevelUp(result.newLevel, result.xpAwarded);
     }
   };
+
+  const streak = result.streak;
+  const chainProgress = result.chainProgress;
 
   return (
     <Dialog
@@ -55,6 +75,52 @@ export function QuestCompletionModal({
           </div>
         </div>
 
+        {/* Streak Feedback if active */}
+        {streak && streak.firstToday && (
+          <div className="p-3.5 rounded-xl border border-amber-200 bg-gradient-to-r from-amber-50 to-orange-50 flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0">
+                <Flame className="h-4 w-4 animate-bounce" />
+              </div>
+              <div>
+                <span className="font-bold text-amber-900 block">
+                  {streak.isNewRecord
+                    ? 'New Personal Best Streak!'
+                    : streak.streakExtended
+                    ? `Streak Extended: ${streak.currentStreak} Days!`
+                    : '+1 Day Streak Started!'}
+                </span>
+                <span className="text-amber-700 text-[11px]">
+                  Daily consistency recorded for today.
+                </span>
+              </div>
+            </div>
+            <Badge variant="rpg" size="sm">
+              {streak.currentStreak} Days
+            </Badge>
+          </div>
+        )}
+
+        {/* Quest Chain Progress if active */}
+        {chainProgress && (
+          <div className="p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/50 space-y-2 text-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1.5 font-bold text-indigo-900">
+                <Layers className="h-4 w-4 text-indigo-600" />
+                <span>{chainProgress.chainTitle}</span>
+              </div>
+              <Badge variant="neutral" size="sm">
+                Step {chainProgress.completedStepOrder} of {chainProgress.totalSteps}
+              </Badge>
+            </div>
+            <p className="text-indigo-700 text-[11px]">
+              {chainProgress.isChainCompleted
+                ? 'Mastery Achieved! Entire quest chain completed!'
+                : `Step ${chainProgress.completedStepOrder} completed. Next step unlocked!`}
+            </p>
+          </div>
+        )}
+
         {/* Level Up Notice if applicable */}
         {result.leveledUp ? (
           <div className="p-3 rounded-lg border border-amber-300 bg-amber-50 text-amber-800 text-xs flex items-center justify-between">
@@ -72,8 +138,8 @@ export function QuestCompletionModal({
         )}
 
         <div className="flex justify-end pt-2">
-          <Button variant="primary" onClick={handleContinue} icon={<ArrowRight className="h-4 w-4" />}>
-            Continue
+          <Button variant="primary" onClick={handleContinue} className="gap-1.5 shadow-sm">
+            Continue <ArrowRight className="h-4 w-4" />
           </Button>
         </div>
       </div>

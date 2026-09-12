@@ -8,3 +8,7 @@ export * from './schemas/auth';
 export * from './types/quest';
 export * from './schemas/quest';
 export * from './constants/progression';
+export * from './types/streak';
+export * from './schemas/streak';
+export * from './types/quest-chain';
+export * from './schemas/quest-chain';

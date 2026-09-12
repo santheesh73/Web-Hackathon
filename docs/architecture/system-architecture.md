@@ -20,36 +20,45 @@ Existing User Flow:
 Landing (/) -> Login (/login) -> Dashboard (/dashboard)
 ```
 
-### Phase 3 Quest & Progression Loop
+### Phase 4 Gameplay Loop
 ```
 Dashboard (/dashboard)
        │
-       ├─► Quest Creation (/quests/create)
+       ├─► Consistency Engine (StreakCard & StreakCalendar)
        │         │
-       │         └─► Server assigns authoritative XP (Easy: 25, Medium: 50, Hard: 100)
+       │         └─► Server-controlled Streak Recovery Shield (/streak/recover)
        │
-       ├─► Quest Board (/quests) [Filter: All / Active / Completed]
+       ├─► Quest Chains (/quests/chains)
        │         │
-       │         └─► Quest Details (/quests/:questId)
-       │                   │
-       │                   └─► Atomic Completion (RPC `complete_quest` / `POST /quest-completion`)
-       │                             ├─► Assert status is ACTIVE (idempotent / prevents duplicate XP)
-       │                             ├─► Mark status COMPLETED
-       │                             ├─► Add XP to Character
-       │                             ├─► Deterministic Level Engine calculation
-       │                             └─► Celebration Modal & LevelUp Modal Trigger
+       │         ├─► Chain Creation (/quests/chains/create)
+       │         │         └─► Step 1 = AVAILABLE, Steps 2..N = LOCKED
+       │         │
+       │         └─► Chain Roadmap Details (/quests/chains/:chainId)
+       │
+       └─► Atomic Multi-System Quest Completion (/quest-completion)
+                 │
+                 ├─► Asserts status is ACTIVE
+                 ├─► Asserts attached chain step is AVAILABLE (rejects LOCKED)
+                 ├─► Conquers quest & credits server-authoritative XP
+                 ├─► Calculates deterministic character level
+                 ├─► Records daily activity for UTC calendar day
+                 ├─► Updates consecutive active day streak
+                 └─► Unlocks step N+1 in chain (or completes chain)
 ```
 
 ## Core Architectural Invariants
-1. **Server-Authoritative Progression**:
-   - XP rewards are strictly bound to quest difficulty on the backend/database layer.
-   - Clients cannot supply arbitrary XP values; any client attempt to specify custom XP is overwritten.
-2. **Atomic & Idempotent Completion**:
-   - Completed quests cannot be completed twice.
-   - In Supabase PostgreSQL, `complete_quest` verifies `status = 'ACTIVE'` within a transaction.
-   - In Fastify, `POST /quest-completion` checks `quest.status` and rejects re-completion with `409 Conflict`.
-3. **Deterministic Level Engine**:
-   - Level thresholds are computed with mathematical purity in both PostgreSQL (`calculate_character_level`) and shared TypeScript (`getLevelFromXp`).
-   - Thresholds: Level 1 (0–99), Level 2 (100–249), Level 3 (250–449), Level 4 (450–699), Level 5 (700–999), Level 6+ (+350 XP per tier).
-4. **Shared TypeScript Contracts**:
-   - Data transfer schemas and interfaces live in `src/shared/` and are consumed across the monorepo.
+1. **Deterministic Calendar Day & Timezone Strategy**:
+   - Streaks are strictly anchored to **UTC calendar dates (`YYYY-MM-DD`)**.
+   - Eliminates client clock manipulation, daylight saving transitions, and midnight rollover discrepancies.
+   - A calendar day counts as active when at least one qualifying quest has its completion on that UTC date. Multiple completions on the same day count as 1 active day.
+2. **Sequential Quest Chain Locking**:
+   - In a chain of $N$ steps, only the current step is `AVAILABLE`. Future steps remain `LOCKED`.
+   - Completing Step $K$ unlocks Step $K+1$.
+   - Directly attempting to complete a locked step via API is rejected by both the database and backend with `400 Bad Request`.
+3. **Limited Server-Authoritative Streak Recovery**:
+   - Eligible only when exactly 1 day was missed (`last_activity_date === yesterday - 1 day`).
+   - Each user is granted a single recovery shield that cannot be spammed or reused.
+   - The server verifies eligibility and injects a recovery activity record.
+4. **Atomic Multi-System Completion**:
+   - All state updates (quest, character XP/level, daily activity, streak, chain step advancement) occur within a single atomic database procedure (`complete_quest`) or Fastify route handler.
+   - Duplicate completion is strictly prevented and rejected with `409 Conflict`.

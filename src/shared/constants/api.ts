@@ -4,6 +4,10 @@ export const API_ROUTES = {
   QUESTS: '/quests',
   QUEST_COMPLETION: '/quest-completion',
   PROGRESSION: '/progression',
+  STREAK: '/streak',
+  STREAK_CALENDAR: '/streak/calendar',
+  STREAK_RECOVER: '/streak/recover',
+  QUEST_CHAINS: '/quest-chains',
 } as const;
 
 export const DEFAULT_PORTS = {

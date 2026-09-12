@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { getSupabaseClient, isSupabaseConfigured } from '@/lib/supabase/client';
@@ -277,6 +277,16 @@ export function useQuests() {
           return { success: false, error: 'Quest is already completed' };
         }
 
+        // Chain step locked check (Local storage mode)
+        const stepsKey = `life_rpg_chain_steps_${user.id}`;
+        const storedSteps = localStorage.getItem(stepsKey);
+        const chainSteps: any[] = storedSteps ? JSON.parse(storedSteps) : [];
+        const attachedStep = chainSteps.find((s) => s.questId === questId);
+
+        if (attachedStep && attachedStep.status === 'LOCKED') {
+          return { success: false, error: 'Cannot complete locked quest chain step. Complete preceding steps first.' };
+        }
+
         // 1. Mark completed
         target.status = 'COMPLETED';
         target.completedAt = new Date().toISOString();
@@ -300,6 +310,92 @@ export function useQuests() {
           updatedAt: new Date().toISOString(),
         };
 
+        // 3. Streak processing (Local storage mode)
+        const todayStr = new Date().toISOString().split('T')[0];
+        const yesterdayDate = new Date();
+        yesterdayDate.setUTCDate(yesterdayDate.getUTCDate() - 1);
+        const yesterdayStr = yesterdayDate.toISOString().split('T')[0];
+
+        const streakKey = `life_rpg_streak_${user.id}`;
+        const actKey = `life_rpg_activities_${user.id}`;
+        const storedStreak = localStorage.getItem(streakKey);
+        const storedActs = localStorage.getItem(actKey);
+
+        const streakObj = storedStreak ? JSON.parse(storedStreak) : { currentStreak: 0, longestStreak: 0, recoveryAvailable: true };
+        const actList: any[] = storedActs ? JSON.parse(storedActs) : [];
+        const existingToday = actList.find((a) => a.activityDate === todayStr);
+
+        let firstToday = false;
+        let streakExtended = false;
+        let isNewRecord = false;
+        let newStreakCount = streakObj.currentStreak;
+
+        if (!existingToday) {
+          firstToday = true;
+          if (streakObj.lastActivityDate === yesterdayStr) {
+            newStreakCount = streakObj.currentStreak + 1;
+            streakExtended = true;
+          } else {
+            newStreakCount = 1;
+            streakExtended = false;
+          }
+          isNewRecord = newStreakCount > (streakObj.longestStreak || 0);
+          streakObj.longestStreak = Math.max(streakObj.longestStreak || 0, newStreakCount);
+          streakObj.currentStreak = newStreakCount;
+          streakObj.lastActivityDate = todayStr;
+
+          actList.push({
+            id: 'act-' + Date.now(),
+            userId: user.id,
+            activityDate: todayStr,
+            questsCompleted: 1,
+            isRecovery: false,
+            createdAt: new Date().toISOString(),
+          });
+        } else {
+          existingToday.questsCompleted += 1;
+        }
+
+        localStorage.setItem(streakKey, JSON.stringify(streakObj));
+        localStorage.setItem(actKey, JSON.stringify(actList));
+
+        // 4. Quest Chain step unlock (Local storage mode)
+        let chainProgress = null;
+        if (attachedStep) {
+          attachedStep.status = 'COMPLETED';
+          attachedStep.updatedAt = new Date().toISOString();
+
+          const allChainSteps = chainSteps.filter((s) => s.chainId === attachedStep.chainId);
+          const nextStep = allChainSteps.find((s) => s.stepOrder === attachedStep.stepOrder + 1);
+          let isChainCompleted = false;
+
+          if (nextStep) {
+            nextStep.status = 'AVAILABLE';
+            nextStep.updatedAt = new Date().toISOString();
+          } else {
+            isChainCompleted = true;
+            const chainsKey = `life_rpg_chains_${user.id}`;
+            const storedChains: any[] = JSON.parse(localStorage.getItem(chainsKey) || '[]');
+            const ch = storedChains.find((c) => c.id === attachedStep.chainId);
+            if (ch) {
+              ch.status = 'COMPLETED';
+              localStorage.setItem(chainsKey, JSON.stringify(storedChains));
+            }
+          }
+
+          localStorage.setItem(stepsKey, JSON.stringify(chainSteps));
+
+          chainProgress = {
+            chainId: attachedStep.chainId,
+            chainTitle: 'Active Chain',
+            completedStepOrder: attachedStep.stepOrder,
+            totalSteps: allChainSteps.length,
+            completedSteps: allChainSteps.filter((s) => s.status === 'COMPLETED').length,
+            isChainCompleted,
+            nextStepOrder: nextStep?.stepOrder,
+          };
+        }
+
         localStorage.setItem(charKey, JSON.stringify(charObj));
         localStorage.setItem(key, JSON.stringify(list));
 
@@ -315,7 +411,15 @@ export function useQuests() {
             previousLevel,
             newLevel,
             leveledUp,
-          },
+            streak: {
+              currentStreak: streakObj.currentStreak,
+              longestStreak: streakObj.longestStreak,
+              firstToday,
+              streakExtended,
+              isNewRecord,
+            },
+            chainProgress,
+          } as any,
         };
       }
     } catch {

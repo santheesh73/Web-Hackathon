@@ -5,6 +5,8 @@ import { API_ROUTES } from '../../src/shared/constants/api';
 import { characterRoutes } from './modules/character/routes';
 import { questRoutes } from './modules/quests/routes';
 import { progressionRoutes } from './modules/progression/routes';
+import { streakRoutes } from './modules/streak/routes';
+import { questChainRoutes } from './modules/quest-chains/routes';
 
 export function buildApp(): FastifyInstance {
   const app = Fastify({
@@ -31,6 +33,8 @@ export function buildApp(): FastifyInstance {
   app.register(characterRoutes);
   app.register(questRoutes);
   app.register(progressionRoutes);
+  app.register(streakRoutes);
+  app.register(questChainRoutes);
 
   return app;
 }

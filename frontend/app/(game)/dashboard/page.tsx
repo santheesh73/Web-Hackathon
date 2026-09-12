@@ -18,11 +18,12 @@ import {
   Clock,
   PlusCircle,
   ArrowRight,
-  TrendingUp,
+  Layers,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { useCharacter } from '@/hooks/use-character';
 import { useQuests } from '@/features/quests/use-quests';
+import { useQuestChains } from '@/features/quest-chains/use-quest-chains';
 import { AVATAR_OPTIONS } from '@/lib/avatars';
 import { PageContainer } from '@/components/layout/PageContainer';
 import {
@@ -30,14 +31,15 @@ import {
   CardHeader,
   CardTitle,
   CardDescription,
-  CardContent,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { XPBar } from '@/components/progression/xp-bar';
 import { ProgressionSummary } from '@/components/progression/progression-summary';
 import { QuestCategoryBadge } from '@/components/quests/quest-category';
-import { getXpProgress } from '@/features/progression/level-engine';
+import { StreakCard } from '@/components/streak/streak-card';
+import { StreakCalendar } from '@/components/streak/streak-calendar';
+import { QuestChainCard } from '@/components/quests/quest-chain-card';
 
 const AVATAR_ICONS: Record<string, LucideIcon> = {
   Shield,
@@ -51,7 +53,8 @@ const AVATAR_ICONS: Record<string, LucideIcon> = {
 export default function DashboardPage() {
   const { user } = useAuth();
   const { character, fetchCharacter } = useCharacter();
-  const { quests, allQuests, loading: questsLoading } = useQuests();
+  const { allQuests, loading: questsLoading } = useQuests();
+  const { chains, loading: chainsLoading } = useQuestChains();
 
   React.useEffect(() => {
     if (user && !character) {
@@ -70,12 +73,12 @@ export default function DashboardPage() {
   const completedQuests = allQuests.filter((q) => q.status === 'COMPLETED');
   const recentQuests = [...allQuests].slice(0, 4);
 
-  const progress = getXpProgress(charXp);
+  const activeChains = chains.filter((c) => c.status === 'ACTIVE');
 
   return (
     <PageContainer>
       <div className="space-y-8">
-        {/* Personalized Welcome Banner */}
+        {/* 1. Personalized Welcome Banner */}
         <div className="p-6 sm:p-8 rounded-2xl border border-border bg-gradient-to-r from-surface to-surface-muted shadow-sm space-y-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-4">
@@ -116,13 +119,13 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Quick XP Bar in Banner */}
+          {/* XP Bar in Banner */}
           <div className="pt-4 border-t border-border/60">
             <XPBar xp={charXp} showDetails />
           </div>
         </div>
 
-        {/* Live Progression Overview Cards */}
+        {/* 2. Live Progression Overview Metrics */}
         <ProgressionSummary
           xp={charXp}
           level={charLevel}
@@ -130,7 +133,69 @@ export default function DashboardPage() {
           completedQuestsCount={completedQuests.length}
         />
 
-        {/* Quest Section */}
+        {/* 3. Streak & Consistency Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-1">
+            <StreakCard className="h-full" />
+          </div>
+          <div className="lg:col-span-2">
+            <StreakCalendar days={28} className="h-full" />
+          </div>
+        </div>
+
+        {/* 4. Active Quest Chains Section */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <h3 className="text-lg font-bold tracking-tight text-foreground flex items-center gap-2">
+                <Layers className="h-5 w-5 text-primary" /> Active Quest Chains
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Sequential long-term roadmaps to conquer ambitious real-world goals.
+              </p>
+            </div>
+            <Link
+              href="/quests/chains"
+              className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+            >
+              View all chains ({chains.length}) <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          {chainsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="h-44 rounded-2xl bg-slate-100 animate-pulse border border-border" />
+              <div className="h-44 rounded-2xl bg-slate-100 animate-pulse border border-border" />
+            </div>
+          ) : activeChains.length === 0 ? (
+            <Card className="p-6 text-center border-dashed border-2 border-border bg-surface/40 space-y-3">
+              <div className="h-10 w-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
+                <Layers className="h-5 w-5" />
+              </div>
+              <div>
+                <h4 className="font-bold text-foreground text-sm">No Active Quest Chains</h4>
+                <p className="text-xs text-muted-foreground max-w-sm mx-auto mt-0.5">
+                  Break a major life project into a sequence of ordered steps with automatic unlocking.
+                </p>
+              </div>
+              <div className="pt-1">
+                <Link href="/quests/chains/create">
+                  <Button variant="rpg" size="sm" className="gap-1.5">
+                    <PlusCircle className="h-3.5 w-3.5" /> Create Quest Chain
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {activeChains.slice(0, 2).map((chain) => (
+                <QuestChainCard key={chain.id} chain={chain} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* 5. Active & Recent Quests Section */}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
@@ -217,29 +282,13 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* Future Gameplay System Placeholder Cards */}
+        {/* 6. Future Expansion Modules Preview */}
         <div>
           <h3 className="text-lg font-bold tracking-tight text-foreground mb-4">
             Upcoming Expansion Modules
           </h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {/* Streak & Multipliers */}
-            <Card variant="muted">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <Flame className="h-5 w-5 text-amber-500" />
-                  <Badge variant="neutral" size="sm">
-                    Phase 4
-                  </Badge>
-                </div>
-                <CardTitle className="text-base mt-2">Streaks & Combos</CardTitle>
-                <CardDescription className="text-xs">
-                  Daily consistency multipliers, streak freezes, and habit continuity rewards.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            {/* Skill Tree */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Skill Tree & Boss Quests */}
             <Card variant="muted">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
@@ -248,9 +297,9 @@ export default function DashboardPage() {
                     Phase 5
                   </Badge>
                 </div>
-                <CardTitle className="text-base mt-2">Skill Tree & Perks</CardTitle>
+                <CardTitle className="text-base mt-2">Skill Tree & Boss Battles</CardTitle>
                 <CardDescription className="text-xs">
-                  Category mastery branches, node unlocks, and attribute evolution.
+                  Category mastery branches, attribute evolution, and epic boss milestones.
                 </CardDescription>
               </CardHeader>
             </Card>

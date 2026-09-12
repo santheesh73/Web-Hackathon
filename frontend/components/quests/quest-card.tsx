@@ -1,8 +1,8 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Calendar, Clock, CheckCircle2, ChevronRight, AlertTriangle } from 'lucide-react';
+import { Calendar, Clock, CheckCircle2, ChevronRight, AlertTriangle, Layers } from 'lucide-react';
 import type { Quest } from '@/../src/shared/types/quest';
 import { Card, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,9 +15,14 @@ export interface QuestCardProps {
   quest: Quest;
   onComplete?: (questId: string) => Promise<void>;
   completing?: boolean;
+  chainInfo?: {
+    chainTitle: string;
+    stepOrder: number;
+    totalSteps: number;
+  };
 }
 
-export function QuestCard({ quest, onComplete, completing = false }: QuestCardProps) {
+export function QuestCard({ quest, onComplete, completing = false, chainInfo }: QuestCardProps) {
   const isCompleted = quest.status === 'COMPLETED';
 
   // Check if overdue
@@ -56,6 +61,12 @@ export function QuestCard({ quest, onComplete, completing = false }: QuestCardPr
               <Badge variant={difficultyVariants[quest.difficulty] || 'neutral'} size="sm">
                 {quest.difficulty}
               </Badge>
+              {chainInfo && (
+                <Badge variant="rpg" size="sm" className="gap-1">
+                  <Layers className="h-3 w-3" />
+                  {chainInfo.chainTitle} • Step {chainInfo.stepOrder} of {chainInfo.totalSteps}
+                </Badge>
+              )}
               {isOverdue && (
                 <Badge variant="warning" size="sm" className="gap-1 text-amber-700 bg-amber-50">
                   <AlertTriangle className="h-3 w-3 text-amber-600" />

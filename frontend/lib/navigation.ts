@@ -1,4 +1,4 @@
-﻿import {
+import {
   LayoutDashboard,
   Swords,
   User,
@@ -37,7 +37,7 @@ export const NAVIGATION_CONFIG: NavGroup[] = [
   {
     group: 'PROGRESSION',
     items: [
-      { name: 'Quest Chains', href: '/quest-chains', icon: Link },
+      { name: 'Quest Chains', href: '/quests/chains', icon: Link },
       { name: 'Boss Quests', href: '/boss-quests', icon: Flame, badge: '1 Alert', badgeVariant: 'default' },
       { name: 'History', href: '/history', icon: History },
     ],
