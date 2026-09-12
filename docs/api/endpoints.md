@@ -362,3 +362,98 @@
 - **Response (400 Bad Request)**: Insufficient SP, attribute level requirement not met, or prerequisite skill locked.
 - **Response (409 Conflict)**: Skill is already unlocked.
 
+---
+
+## Phase 6: Boss Quest System
+
+### List Boss Quests
+- **Method**: `GET`
+- **Path**: `/boss-quests`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Retrieves all user's Boss Quests with computed objective progress percentages, linked quests, and defeat statuses.
+- **Response (200 OK)**: Array of `BossQuestWithDetails`.
+
+### Create Boss Quest
+- **Method**: `POST`
+- **Path**: `/boss-quests`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Description**: Creates a new Boss Quest with ordered milestone objectives. Reward XP is strictly server-authoritative based on difficulty (`Rare`: 250 XP, `Epic`: 500 XP, `Legendary`: 1000 XP).
+- **Request Body**:
+  ```json
+  {
+    "title": "Launch My Portfolio",
+    "description": "Design, build, populate and deploy portfolio",
+    "difficulty": "Epic",
+    "deadline": "2026-10-01",
+    "objectives": [
+      { "title": "Design System", "requiredProgress": 1 },
+      { "title": "Frontend Implementation", "requiredProgress: 2 }
+    ]
+  }
+  ```
+- **Response (201 Created)**: Created `BossQuestWithDetails`.
+
+### Get Boss Quest Details
+- **Method**: `GET`
+- **Path**: `/boss-quests/:bossId`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Retrieves detailed information for a single Boss Quest.
+- **Response (200 OK)**: `BossQuestWithDetails`.
+- **Response (404 Not Found)**: Not found or unauthorized.
+
+### Update Boss Quest
+- **Method**: `PATCH`
+- **Path**: `/boss-quests/:bossId`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Description**: Updates title, description, or deadline of an active Boss Quest. Rejected if Boss is already completed.
+- **Response (200 OK)**: Updated `BossQuestWithDetails`.
+- **Response (400 Bad Request)**: Cannot modify a completed Boss Quest.
+
+### Delete Boss Quest
+- **Method**: `DELETE`
+- **Path**: `/boss-quests/:bossId`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Deletes a Boss Quest and cascades deletion to its objectives and quest links.
+- **Response (200 OK)**: `{ "success": true, "message": "Boss Quest deleted" }`.
+
+### Add Objective
+- **Method**: `POST`
+- **Path**: `/boss-quests/:bossId/objectives`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Request Body**:
+  ```json
+  {
+    "title": "Comprehensive Testing",
+    "description": "Integration and unit tests",
+    "requiredProgress": 2
+  }
+  ```
+- **Response (201 Created)**: Created `BossObjective`.
+
+### Link Quest to Objective
+- **Method**: `POST`
+- **Path**: `/boss-quests/:bossId/link-quest`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Request Body**:
+  ```json
+  {
+    "questId": "quest-123",
+    "objectiveId": "bobj-456"
+  }
+  ```
+- **Response (201 Created)**: `{ "success": true, "link": BossObjectiveQuest }`.
+- **Response (409 Conflict)**: Quest is already linked to this objective.
+
+### Unlink Quest from Objective
+- **Method**: `DELETE`
+- **Path**: `/boss-quests/:bossId/link-quest`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Request Body**:
+  ```json
+  {
+    "questId": "quest-123",
+    "objectiveId": "bobj-456"
+  }
+  ```
+- **Response (200 OK)**: `{ "success": true, "message": "Quest unlinked successfully" }`.
+

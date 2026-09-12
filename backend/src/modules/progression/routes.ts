@@ -42,6 +42,12 @@ import type {
   EvolutionCalculationResult,
   EvolutionTier,
 } from '../../../../src/shared/types/evolution';
+import {
+  findBossObjectivesByQuestId,
+  saveBoss,
+  buildBossWithDetails,
+} from '../boss-quests/routes';
+import type { BossCompletionResult } from '../../../../src/shared/types/boss-quest';
 
 const CompleteQuestBodySchema = z.object({
   questId: z.string().min(1, 'Quest ID is required'),
@@ -183,7 +189,7 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
       skillPointsEarned: attrSpGain,
     };
 
-    const evolution: EvolutionCalculationResult = {
+    let evolution: EvolutionCalculationResult = {
       tier: newEvolutionTier,
       title: newEvolutionTitle,
       tierName: TIER_NAMES[newEvolutionTier],
@@ -277,6 +283,65 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
       };
     }
 
+    // 8. Boss Objective & Boss Defeat Processing
+    let bossDefeat: BossCompletionResult | null = null;
+    const linkedBossMatches = findBossObjectivesByQuestId(questId);
+
+    for (const match of linkedBossMatches) {
+      const { boss } = match;
+      if (boss.userId === userId && boss.status === 'ACTIVE') {
+        const details = buildBossWithDetails(boss);
+        if (details.isDefeated) {
+          boss.status = 'COMPLETED';
+          boss.completedAt = completedAt;
+          boss.updatedAt = completedAt;
+          saveBoss(boss);
+
+          // Award Boss reward XP
+          const bossReward = boss.rewardXp;
+          const charXpBeforeBoss = character.xp;
+          const charXpAfterBoss = charXpBeforeBoss + bossReward;
+          const charLevelAfterBoss = getLevelFromXp(charXpAfterBoss);
+          const bossSpGain =
+            charLevelAfterBoss > character.level ? charLevelAfterBoss - character.level : 0;
+
+          character.xp = charXpAfterBoss;
+          if (charLevelAfterBoss > character.level) {
+            character.level = charLevelAfterBoss;
+          }
+          character.skillPoints = (character.skillPoints ?? 0) + bossSpGain;
+
+          // Recalculate evolution with new level
+          const updatedTier = calculateEvolutionTier(
+            character.level,
+            unlockedSkills.length,
+            maxAttrLevel
+          );
+          character.evolutionTier = updatedTier;
+          character.evolutionTitle = getEvolutionTitle(character.avatar, updatedTier);
+          character.updatedAt = completedAt;
+          saveCharacter(character);
+
+          evolution = {
+            tier: updatedTier,
+            title: character.evolutionTitle,
+            tierName: TIER_NAMES[updatedTier],
+            evolved: updatedTier > (previousEvolutionTier || 1),
+            previousTier: (previousEvolutionTier || 1) as EvolutionTier,
+          };
+
+          bossDefeat = {
+            bossId: boss.id,
+            bossTitle: boss.title,
+            difficulty: boss.difficulty,
+            rewardXp: boss.rewardXp,
+            completedAt,
+            defeated: true,
+          };
+        }
+      }
+    }
+
     const result: QuestCompletionResult & {
       streak: {
         currentStreak: number;
@@ -286,13 +351,14 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
         isNewRecord: boolean;
       };
       chainProgress?: ChainProgressionResult | null;
+      bossDefeat?: BossCompletionResult | null;
     } = {
       quest,
       xpAwarded,
       character,
       previousLevel,
-      newLevel,
-      leveledUp,
+      newLevel: character.level,
+      leveledUp: character.level > previousLevel,
       streak: {
         currentStreak,
         longestStreak,
@@ -302,9 +368,10 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
       },
       chainProgress,
       attributeGain,
-      skillPointsEarned: totalSpEarned,
-      unspentSkillPoints: currentSp,
+      skillPointsEarned: (totalSpEarned ?? 0) + (bossDefeat ? Math.max(0, character.level - newLevel) : 0),
+      unspentSkillPoints: character.skillPoints ?? currentSp,
       evolution,
+      bossDefeat,
     };
 
     return reply.status(200).send(result);

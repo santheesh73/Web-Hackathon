@@ -38,13 +38,14 @@ Dashboard (/dashboard)
        │
        └─► Atomic Multi-System Quest Completion (/quest-completion)
                  │
-                 ├─► Conquers quest & credits server-authoritative XP
-                 ├─► Calculates deterministic character level (+1 SP on level-up)
-                 ├─► Maps quest category to attribute key & awards Attribute XP
-                 ├─► Calculates deterministic attribute level (+1 SP on attribute level-up)
-                 ├─► Evaluates Character Evolution Tier (1 to 4) & updates title
-                 ├─► Records daily activity & advances streaks
-                 └─► Unlocks step N+1 in chain (or completes chain)
+                  ├─► Conquers quest & credits server-authoritative XP
+                  ├─► Calculates deterministic character level (+1 SP on level-up)
+                  ├─► Maps quest category to attribute key & awards Attribute XP
+                  ├─► Calculates deterministic attribute level (+1 SP on attribute level-up)
+                  ├─► Evaluates Character Evolution Tier (1 to 4) & updates title
+                  ├─► Records daily activity & advances streaks
+                  ├─► Unlocks step N+1 in chain (or completes chain)
+                  └─► Advances linked Boss Objectives & triggers Boss Defeat bounty if all objectives cleared
 ```
 
 ## Core Architectural Invariants
@@ -66,5 +67,10 @@ Dashboard (/dashboard)
    - Character evolution ascensions upgrade titles, cosmetic visual aura frames, and passive perks.
    - Evolution never resets or penalizes player level, attributes, or unspent points.
 6. **Unified Atomic Multi-System Completion**:
-   - All state updates (quest, character XP/level, attributes XP/level, skill points, evolution tier, streak, chain step advancement) occur within a single atomic database procedure (`complete_quest`) or Fastify route handler.
+   - All state updates (quest, character XP/level, attributes XP/level, skill points, evolution tier, streak, chain step advancement, boss objective progress, and boss defeat rewards) occur within a single atomic database procedure (`complete_quest`) or Fastify route handler.
    - Duplicate completion is strictly prevented and rejected with `409 Conflict`.
+7. **Server-Authoritative Boss Defeat & Bounty**:
+   - Boss Quests cannot be marked completed directly by clients.
+   - Objective completion is derived from completed linked quests (`completed >= required`).
+   - Boss progress is derived from completed objectives fraction (`completed_objectives / total_objectives * 100`).
+   - Defeating a Boss grants fixed difficulty XP bounty (`Rare`: 250 XP, `Epic`: 500 XP, `Legendary`: 1000 XP) exactly once. Completed Bosses become immutable read-only records.
