@@ -180,7 +180,7 @@ Server-authoritative skill attunement:
 Server-controlled procedure to restore a streak when exactly 1 day was missed.
 
 ### `complete_quest(p_quest_id UUID) -> JSONB`
-Atomic multi-system transaction:
+Atomic multi-system transaction (Updated Phase 6):
 1. Validates quest is `ACTIVE`.
 2. Validates linked quest chain step (if any) is `AVAILABLE` (rejects locked steps with `P0006`).
 3. Sets quest status `COMPLETED`.
@@ -190,4 +190,55 @@ Atomic multi-system transaction:
 7. Recalculates character evolution tier and title.
 8. Upserts daily activity into `streak_activities`. Increments or resets streak.
 9. If part of a chain: marks step `COMPLETED`, unlocks step $N+1$ (`AVAILABLE`), or marks chain `COMPLETED`.
-10. Returns consolidated progression payload.
+10. **Boss Integration**:
+    - Checks all linked Boss objectives (`boss_objective_quests`).
+    - Recalculates completed objectives count based on required progress threshold.
+    - If all objectives of an `ACTIVE` Boss are completed:
+      - Marks Boss `COMPLETED`.
+      - Awards Boss `reward_xp` to character.
+      - Recalculates character level, skill points, and evolution rank.
+      - Includes `boss_defeat` object in the returned JSONB payload.
+11. Returns consolidated progression payload.
+
+---
+
+## Phase 6 Tables
+
+### `public.boss_quests`
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Primary Key |
+| `character_id` | UUID | FK -> `characters(id)` ON DELETE CASCADE | Character ownership |
+| `user_id` | UUID | FK -> `auth.users(id)` ON DELETE CASCADE | Auth user ownership |
+| `title` | VARCHAR(100) | NOT NULL | Goal title |
+| `description` | TEXT | NULLABLE | Detailed goal description |
+| `difficulty` | VARCHAR(20) | CHECK in ('Rare', 'Epic', 'Legendary') | Fixed difficulty tier |
+| `status` | VARCHAR(20) | DEFAULT 'ACTIVE' CHECK in ('ACTIVE', 'COMPLETED', 'ARCHIVED') | Encounter status |
+| `deadline` | DATE | NULLABLE | Optional milestone target date |
+| `reward_xp` | INT | NOT NULL, CHECK > 0 | Server-authoritative XP bounty |
+| `created_at` | TIMESTAMPTZ | NOT NULL | Record creation timestamp |
+| `updated_at` | TIMESTAMPTZ | NOT NULL | Last update timestamp |
+| `completed_at` | TIMESTAMPTZ | NULLABLE | Defeat timestamp |
+
+### `public.boss_objectives`
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Primary Key |
+| `boss_id` | UUID | FK -> `boss_quests(id)` ON DELETE CASCADE | Parent Boss reference |
+| `user_id` | UUID | FK -> `auth.users(id)` ON DELETE CASCADE | Auth user ownership |
+| `title` | VARCHAR(100) | NOT NULL | Objective title |
+| `description` | TEXT | NULLABLE | Objective criteria |
+| `display_order` | INT | NOT NULL DEFAULT 1 | Sequential ordering |
+| `required_progress` | INT | NOT NULL DEFAULT 1, CHECK > 0 | Required quests count |
+| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
+| `updated_at` | TIMESTAMPTZ | NOT NULL | Update timestamp |
+
+### `public.boss_objective_quests`
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Primary Key |
+| `objective_id` | UUID | FK -> `boss_objectives(id)` ON DELETE CASCADE | Objective reference |
+| `quest_id` | UUID | FK -> `quests(id)` ON DELETE CASCADE | Normal quest reference |
+| `user_id` | UUID | FK -> `auth.users(id)` ON DELETE CASCADE | User ownership |
+| `created_at` | TIMESTAMPTZ | NOT NULL | Link timestamp |
+| *Constraint* | UNIQUE | `(objective_id, quest_id)` | Duplicate link prevention |

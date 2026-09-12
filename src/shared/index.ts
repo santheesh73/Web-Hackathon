@@ -19,3 +19,6 @@ export * from './constants/skills';
 export * from './schemas/skill';
 export * from './types/evolution';
 export * from './constants/evolution';
+export * from './types/boss-quest';
+export * from './constants/boss-quests';
+export * from './schemas/boss-quest';

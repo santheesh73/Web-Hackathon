@@ -12,6 +12,9 @@ export const API_ROUTES = {
   EVOLUTION: '/character/evolution',
   SKILL_TREE: '/skill-tree',
   SKILL_TREE_UNLOCK: '/skill-tree/unlock',
+  BOSS_QUESTS: '/boss-quests',
+  BOSS_OBJECTIVES: '/boss-quests/:bossId/objectives',
+  BOSS_LINK_QUEST: '/boss-quests/:bossId/link-quest',
 } as const;
 
 export const DEFAULT_PORTS = {
