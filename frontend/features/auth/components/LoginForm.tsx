@@ -1,24 +1,39 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Eye, EyeOff, AlertCircle, LogIn } from 'lucide-react';
+import { Eye, EyeOff, AlertCircle, LogIn, Sparkles } from 'lucide-react';
 import { LoginSchema, type LoginInput } from '@/../src/shared/schemas/auth';
 import { useAuth } from '@/hooks/use-auth';
 import { useCharacter } from '@/hooks/use-character';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
+import { seedDemoData } from '@/lib/demo-seed';
 
 export function LoginForm() {
   const router = useRouter();
-  const { signIn } = useAuth();
+  const { signIn, isConfigured } = useAuth();
   const { fetchCharacter } = useCharacter();
   const [showPassword, setShowPassword] = React.useState(false);
   const [serverError, setServerError] = React.useState<string | null>(null);
+  const [demoLoading, setDemoLoading] = React.useState(false);
+
+  const handleDemoLogin = async () => {
+    setDemoLoading(true);
+    setServerError(null);
+
+    const demoEmail = 'demo@liferpg.app';
+    const demoPassword = 'Password123!';
+
+    await signIn(demoEmail, demoPassword);
+    const demoUserId = 'demo-user-demo-liferpg-app';
+    seedDemoData(demoUserId);
+    router.push('/dashboard');
+  };
 
   const {
     register,
@@ -107,6 +122,30 @@ export function LoginForm() {
             className="mt-2"
           >
             Sign In
+          </Button>
+
+          {/* Quick Demo Sign In for Hackathon Judges */}
+          <div className="relative my-4">
+            <div className="absolute inset-0 flex items-center">
+              <span className="w-full border-t border-border/70" />
+            </div>
+            <div className="relative flex justify-center text-xs uppercase">
+              <span className="bg-card px-2 text-muted-foreground font-semibold text-[10px] tracking-wider">
+                Hackathon Evaluation Fast-Pass
+              </span>
+            </div>
+          </div>
+
+          <Button
+            type="button"
+            variant="rpg"
+            fullWidth
+            loading={demoLoading}
+            onClick={handleDemoLogin}
+            icon={<Sparkles className="h-4 w-4" />}
+            className="shadow-sm"
+          >
+            One-Click Quick Demo Sign In
           </Button>
         </form>
       </CardContent>

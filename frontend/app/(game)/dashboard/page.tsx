@@ -139,8 +139,33 @@ export default function DashboardPage() {
           </div>
 
           {/* XP Bar in Banner */}
-          <div className="pt-4 border-t border-border/60">
+          <div className="pt-4 border-t border-border/60 space-y-3">
             <XPBar xp={charXp} showDetails />
+
+            {/* Actionable "What should I do next?" directive */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-primary/5 border border-primary/15 rounded-xl p-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
+                  <Compass className="w-4 h-4" />
+                </div>
+                <div className="text-xs">
+                  <span className="font-bold text-foreground">Suggested Action: </span>
+                  <span className="text-muted-foreground">
+                    {activeQuests.length > 0
+                      ? `Complete "${activeQuests[0].title}" (+${activeQuests[0].xpReward} XP) to build streak momentum!`
+                      : activeBoss
+                      ? `Conquer linked objectives to defeat "${activeBoss.title}"!`
+                      : 'Create your first quest to begin earning XP and unlocking attributes.'}
+                  </span>
+                </div>
+              </div>
+              <Link href={activeQuests.length > 0 ? `/quests/${activeQuests[0].id}` : '/quests/create'}>
+                <Button size="sm" variant="ghost" className="text-xs text-primary hover:text-primary gap-1 h-7 px-2.5 font-semibold">
+                  <span>{activeQuests.length > 0 ? 'Conquer Quest' : 'Start Quest'}</span>
+                  <ArrowRight className="w-3 h-3" />
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 

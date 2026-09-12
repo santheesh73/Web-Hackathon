@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import Link from 'next/link';
@@ -33,7 +33,7 @@ export function Sidebar({ characterName = 'Adventurer' }: SidebarProps) {
           </div>
         </Link>
         <Badge variant="rpg" size="sm">
-          Phase 2
+          HACKATHON BUILD
         </Badge>
       </div>
 

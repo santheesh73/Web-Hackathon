@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import Link from 'next/link';
@@ -9,18 +9,86 @@ import {
   Flame,
   Sparkles,
   ArrowRight,
+  GitFork,
+  Store,
+  Backpack,
+  Trophy,
+  Zap,
   CheckCircle2,
-  Lock,
-  Cpu,
-  Layers,
-  ChevronRight,
+  Compass,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
+import { Card, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { cn } from '@/lib/utils';
 
 export default function MarketingPage() {
+  const PILLARS = [
+    {
+      icon: Swords,
+      title: 'Quests & Tasks',
+      description: 'Convert real-world tasks, workouts, and study routines into quests with server-awarded XP.',
+      color: 'text-indigo-500',
+      bgColor: 'bg-indigo-500/10 border-indigo-500/20',
+    },
+    {
+      icon: Sparkles,
+      title: 'XP & Levels',
+      description: 'Watch your character rank up deterministically through transparent, mathematically sound progression.',
+      color: 'text-amber-500',
+      bgColor: 'bg-amber-500/10 border-amber-500/20',
+    },
+    {
+      icon: Flame,
+      title: 'Streaks & Momentum',
+      description: 'Build daily consistency anchored to UTC calendar days with emergency shield recovery.',
+      color: 'text-rose-500',
+      bgColor: 'bg-rose-500/10 border-rose-500/20',
+    },
+    {
+      icon: Shield,
+      title: 'Attributes & Radar',
+      description: 'Cultivate 6 holistic life disciplines: Strength, Intellect, Discipline, Wisdom, Creativity, and Resilience.',
+      color: 'text-blue-500',
+      bgColor: 'bg-blue-500/10 border-blue-500/20',
+    },
+    {
+      icon: GitFork,
+      title: 'Branching Skill Tree',
+      description: 'Spend earned Skill Points across specialized branches to unlock passive capability perks.',
+      color: 'text-emerald-500',
+      bgColor: 'bg-emerald-500/10 border-emerald-500/20',
+    },
+    {
+      icon: Zap,
+      title: 'Epic Boss Quests',
+      description: 'Deconstruct intimidating milestones into linked multi-stage objectives with massive XP bounties.',
+      color: 'text-red-500',
+      bgColor: 'bg-red-500/10 border-red-500/20',
+    },
+    {
+      icon: Store,
+      title: 'Gold & Rewards Shop',
+      description: 'Earn gold by completing quests and spend it on avatar archetypes, UI themes, and cosmetic flair.',
+      color: 'text-amber-400',
+      bgColor: 'bg-amber-400/10 border-amber-400/20',
+    },
+    {
+      icon: Backpack,
+      title: 'Inventory & Equipment',
+      description: 'Manage owned items, equip custom loadouts across 4 cosmetic slots, and customize your persona.',
+      color: 'text-teal-500',
+      bgColor: 'bg-teal-500/10 border-teal-500/20',
+    },
+    {
+      icon: Trophy,
+      title: 'Achievements & Milestones',
+      description: 'Unlock permanent honor accolades that chronicle your journey and celebrate your dedication.',
+      color: 'text-yellow-500',
+      bgColor: 'bg-yellow-500/10 border-yellow-500/20',
+    },
+  ];
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary/20">
       {/* Top Navbar */}
@@ -40,16 +108,17 @@ export default function MarketingPage() {
             </div>
           </Link>
 
-          <nav className="flex items-center gap-4">
+          <nav className="flex items-center gap-3">
             <Link
-              href="/dashboard"
-              className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              href="/login"
+              className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors px-3 py-1.5"
             >
-              Dashboard
+              Sign In
             </Link>
-            <Link href="/dashboard">
-              <Button size="sm" variant="primary" icon={<ArrowRight className="h-4 w-4" />}>
-                Launch App
+            <Link href="/signup">
+              <Button size="sm" variant="rpg" className="text-xs gap-1.5 shadow-sm">
+                <span>Start Your Journey</span>
+                <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
           </nav>
@@ -59,257 +128,106 @@ export default function MarketingPage() {
       {/* Main Content */}
       <main className="flex-1">
         {/* HERO SECTION */}
-        <section className="py-16 sm:py-24 px-4 sm:px-6 border-b border-border/60 bg-gradient-to-b from-surface to-background">
-          <div className="max-w-5xl mx-auto text-center space-y-6">
+        <section className="py-20 sm:py-28 px-4 sm:px-6 border-b border-border/60 bg-gradient-to-b from-surface to-background relative overflow-hidden">
+          {/* Ambient Glows */}
+          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="max-w-4xl mx-auto text-center space-y-6 relative z-10">
             {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-semibold">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-semibold shadow-xs">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Transform Real Life into an RPG Adventure</span>
+              <span>Real-Life Productivity Reimagined</span>
             </div>
 
             {/* Headline */}
-            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-foreground max-w-4xl mx-auto leading-[1.12]">
-              Turn real-life goals into quests.{' '}
-              <span className="bg-gradient-to-r from-indigo-600 to-indigo-500 bg-clip-text text-transparent">
-                Level up your life.
+            <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight text-foreground max-w-3xl mx-auto leading-[1.15]">
+              What if your real life had an{' '}
+              <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-amber-500 bg-clip-text text-transparent">
+                RPG progression system?
               </span>
             </h1>
 
             {/* Supporting text */}
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Gamify your habits, defeat procrastination, and build meaningful streaks with a
-              modern, server-authoritative progression platform.
+            <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+              Transform everyday tasks, habits, and monumental goals into quests. Earn experience, build unbroken streaks, advance skill trees, vanquish bosses, and forge your personal legend.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-              <Link href="/dashboard">
-                <Button size="lg" variant="primary" icon={<Swords className="h-5 w-5" />}>
-                  Launch App Shell
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
+              <Link href="/signup">
+                <Button size="lg" variant="rpg" className="gap-2 text-sm shadow-md h-11 px-6">
+                  <span>Start Your Journey</span>
+                  <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
-              <a href="#explanation">
-                <Button size="lg" variant="outline">
-                  Explore Concept
+              <Link href="/login">
+                <Button size="lg" variant="outline" className="text-sm h-11 px-6 border-border/70 hover:bg-card">
+                  <span>Sign In & Resume</span>
                 </Button>
-              </a>
-            </div>
-
-            {/* PRODUCT VISUAL PREVIEW (Static Mock UI Composition) */}
-            <div className="pt-10 max-w-3xl mx-auto">
-              <div className="rounded-2xl border border-border bg-surface shadow-2xl p-4 sm:p-6 text-left relative overflow-hidden">
-                {/* Visual Header */}
-                <div className="flex flex-wrap items-center justify-between gap-3 pb-4 border-b border-border">
-                  <div className="flex items-center gap-3">
-                    <div className="h-12 w-12 rounded-xl bg-indigo-600 flex items-center justify-center text-white font-bold text-base shadow-sm">
-                      LV 7
-                    </div>
-                    <div>
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-base text-foreground">Adventurer</span>
-                        <Badge variant="rpg" size="sm">
-                          Novice II
-                        </Badge>
-                      </div>
-                      <p className="text-xs text-muted-foreground">Class: Disciplined Scholar</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold">
-                      <Flame className="h-4 w-4 fill-amber-500 text-amber-500" />
-                      <span>14-Day Streak</span>
-                    </div>
-                    <Badge variant="default" size="sm">
-                      Fastify Verified
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Level Progress Bar */}
-                <div className="py-4 border-b border-border space-y-2">
-                  <div className="flex items-center justify-between text-xs font-medium">
-                    <span className="text-muted-foreground">Experience to Level 8</span>
-                    <span className="font-bold text-amber-600">680 / 1000 XP</span>
-                  </div>
-                  <Progress value={680} max={1000} variant="accent" size="md" />
-                </div>
-
-                {/* Sample Active Quests */}
-                <div className="pt-4 space-y-3">
-                  <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                    <span>Active Daily Quests (Preview)</span>
-                    <span>Reward</span>
-                  </div>
-
-                  {/* Mock Quest 1 */}
-                  <div className="flex items-center justify-between p-3 rounded-xl border border-border bg-surface-muted/40 hover:bg-surface-muted/70 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="h-5 w-5 rounded-md border-2 border-primary/40 flex items-center justify-center text-primary">
-                        <CheckCircle2 className="h-4 w-4" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">
-                          Deep Work Sprint: 90 Minutes Focus
-                        </p>
-                        <p className="text-xs text-muted-foreground">Productivity &bull; +2 INT</p>
-                      </div>
-                    </div>
-                    <Badge variant="rpg" size="sm">
-                      +120 XP
-                    </Badge>
-                  </div>
-
-                  {/* Mock Quest 2 */}
-                  <div className="flex items-center justify-between p-3 rounded-xl border border-border bg-surface-muted/40 hover:bg-surface-muted/70 transition-colors">
-                    <div className="flex items-center gap-3">
-                      <div className="h-5 w-5 rounded-md border-2 border-slate-300" />
-                      <div>
-                        <p className="text-sm font-semibold text-foreground">
-                          Morning Workout & Mobility Circuit
-                        </p>
-                        <p className="text-xs text-muted-foreground">Fitness &bull; +2 STR</p>
-                      </div>
-                    </div>
-                    <Badge variant="rpg" size="sm">
-                      +80 XP
-                    </Badge>
-                  </div>
-                </div>
-
-                {/* Subtitle disclaimer */}
-                <div className="mt-4 pt-3 border-t border-border/60 text-center">
-                  <p className="text-[11px] text-muted-foreground">
-                    Static demonstration preview &bull; Phase 1 Visual Architecture
-                  </p>
-                </div>
-              </div>
+              </Link>
             </div>
           </div>
         </section>
 
-        {/* SHORT PRODUCT EXPLANATION SECTION */}
-        <section id="explanation" className="py-16 sm:py-20 px-4 sm:px-6 max-w-5xl mx-auto">
-          <div className="text-center max-w-2xl mx-auto mb-12 space-y-2">
+        {/* 9 CORE PROGRESSION PILLARS */}
+        <section className="py-20 px-4 sm:px-6 max-w-6xl mx-auto space-y-12">
+          <div className="text-center max-w-2xl mx-auto space-y-2">
+            <Badge variant="rpg" size="sm">
+              Complete Feature Suite
+            </Badge>
             <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-              Built for Sustainable Momentum
+              A Complete RPG Engine for Real Life
             </h2>
-            <p className="text-sm text-muted-foreground">
-              A disciplined blend of real-world productivity principles and engaging RPG metaphors.
+            <p className="text-xs sm:text-sm text-muted-foreground">
+              Every system is server-authoritative, deterministic, and built to keep you motivated without gimmicks.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Pillar 1 */}
-            <Card>
-              <CardHeader>
-                <div className="h-10 w-10 rounded-lg bg-indigo-50 border border-indigo-200 flex items-center justify-center text-indigo-600 mb-2">
-                  <Swords className="h-5 w-5" />
-                </div>
-                <CardTitle className="text-lg">Real-World Quests</CardTitle>
-                <CardDescription>
-                  Transform tasks, habits, and projects into structured quests with explicit XP
-                  rewards and attribute growth.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            {/* Pillar 2 */}
-            <Card>
-              <CardHeader>
-                <div className="h-10 w-10 rounded-lg bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 mb-2">
-                  <Lock className="h-5 w-5" />
-                </div>
-                <CardTitle className="text-lg">Authoritative Progress</CardTitle>
-                <CardDescription>
-                  Server-verified progression logic ensures XP, streaks, and levels maintain
-                  integrity and tangible meaning.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
-            {/* Pillar 3 */}
-            <Card>
-              <CardHeader>
-                <div className="h-10 w-10 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600 mb-2">
-                  <Flame className="h-5 w-5" />
-                </div>
-                <CardTitle className="text-lg">Boss Battles & Streaks</CardTitle>
-                <CardDescription>
-                  Tackle high-resistance challenges and maintain streak chains to earn milestone
-                  achievements and rewards.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            {PILLARS.map((pillar) => {
+              const Icon = pillar.icon;
+              return (
+                <Card
+                  key={pillar.title}
+                  variant="interactive"
+                  className="p-5 flex flex-col justify-between border-border/70 bg-card/60 backdrop-blur-xs hover:border-primary/40 transition-all group"
+                >
+                  <div className="space-y-3">
+                    <div className={cn('w-10 h-10 rounded-xl border flex items-center justify-center shadow-xs', pillar.bgColor)}>
+                      <Icon className={cn('w-5 h-5', pillar.color)} />
+                    </div>
+                    <div className="space-y-1">
+                      <h3 className="font-bold text-sm text-foreground group-hover:text-primary transition-colors">
+                        {pillar.title}
+                      </h3>
+                      <p className="text-xs text-muted-foreground leading-relaxed">
+                        {pillar.description}
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              );
+            })}
           </div>
         </section>
 
-        {/* CORE CONCEPT PREVIEW */}
-        <section className="py-16 sm:py-20 px-4 sm:px-6 bg-surface border-y border-border/80">
-          <div className="max-w-5xl mx-auto space-y-10">
-            <div className="text-center max-w-2xl mx-auto space-y-2">
-              <Badge variant="default" size="sm">
-                System Foundations
-              </Badge>
-              <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-                Architected for Hackathon Excellence
-              </h2>
-              <p className="text-sm text-muted-foreground">
-                Modular full-stack engineering with clean separation of presentation and logic.
-              </p>
+        {/* BOTTOM CALL TO ACTION */}
+        <section className="py-16 sm:py-20 px-4 sm:px-6 bg-surface border-t border-border/80">
+          <div className="max-w-3xl mx-auto text-center space-y-6">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
+              Ready to Level Up Your Real Life?
+            </h2>
+            <p className="text-muted-foreground max-w-xl mx-auto text-xs sm:text-sm">
+              Create your character, embark on your first quest, and experience the satisfaction of seeing real-life progress reflected on your hero dashboard.
+            </p>
+            <div className="flex justify-center pt-2">
+              <Link href="/signup">
+                <Button size="lg" variant="rpg" className="gap-2 text-sm shadow-md h-11 px-8">
+                  <span>Start Your Journey</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
             </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="p-4 rounded-xl border border-border bg-background space-y-2">
-                <Layers className="h-5 w-5 text-indigo-600" />
-                <h3 className="font-bold text-sm text-foreground">Next.js 15 App Router</h3>
-                <p className="text-xs text-muted-foreground">
-                  Modern React 19 server components and client interaction shells.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl border border-border bg-background space-y-2">
-                <Cpu className="h-5 w-5 text-amber-600" />
-                <h3 className="font-bold text-sm text-foreground">Fastify Backend</h3>
-                <p className="text-xs text-muted-foreground">
-                  High-throughput, type-safe API with Zod contract validation.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl border border-border bg-background space-y-2">
-                <Shield className="h-5 w-5 text-emerald-600" />
-                <h3 className="font-bold text-sm text-foreground">Supabase Database</h3>
-                <p className="text-xs text-muted-foreground">
-                  PostgreSQL foundation ready for auth, tables, and RLS security.
-                </p>
-              </div>
-
-              <div className="p-4 rounded-xl border border-border bg-background space-y-2">
-                <Sparkles className="h-5 w-5 text-rose-600" />
-                <h3 className="font-bold text-sm text-foreground">Shared Contracts</h3>
-                <p className="text-xs text-muted-foreground">
-                  Zero model duplication via shared TypeScript definitions.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* SIMPLE CALL TO ACTION */}
-        <section className="py-16 sm:py-20 px-4 sm:px-6 max-w-4xl mx-auto text-center space-y-6">
-          <h2 className="text-3xl font-bold tracking-tight text-foreground">
-            Experience the Phase 1 Application Shell
-          </h2>
-          <p className="text-muted-foreground max-w-xl mx-auto text-sm sm:text-base">
-            Explore the responsive navigation shell, design primitives, and interface layout
-            engineered for future gameplay expansion.
-          </p>
-          <div className="flex justify-center">
-            <Link href="/dashboard">
-              <Button size="lg" variant="primary" icon={<ArrowRight className="h-4 w-4" />}>
-                Launch Application Shell
-              </Button>
-            </Link>
           </div>
         </section>
       </main>
@@ -320,10 +238,10 @@ export default function MarketingPage() {
           <div className="flex items-center gap-2">
             <span className="font-bold text-foreground">LIFE RPG</span>
             <span>&bull;</span>
-            <span>Web Hackathon Project</span>
+            <span>Web Hackathon Prototype</span>
           </div>
           <div>
-            <span>Next.js &bull; Fastify &bull; TypeScript &bull; Tailwind CSS</span>
+            <span>Next.js 15 &bull; Fastify &bull; TypeScript &bull; Supabase PostgreSQL</span>
           </div>
         </div>
       </footer>
