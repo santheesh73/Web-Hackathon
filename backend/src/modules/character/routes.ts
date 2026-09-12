@@ -1,9 +1,17 @@
-﻿import { FastifyInstance, FastifyPluginAsync } from 'fastify';
+import { FastifyInstance, FastifyPluginAsync } from 'fastify';
 import { CharacterCreationSchema } from '../../../../src/shared/schemas/character';
 import type { Character } from '../../../../src/shared/types/character';
 
 // In-memory store for backend test validation and offline development
-const charactersByUserId = new Map<string, Character>();
+export const charactersByUserId = new Map<string, Character>();
+
+export function getCharacterByUserId(userId: string): Character | undefined {
+  return charactersByUserId.get(userId);
+}
+
+export function saveCharacter(character: Character): void {
+  charactersByUserId.set(character.userId, character);
+}
 
 export const characterRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   // GET /character - retrieve authenticated user's character
@@ -47,6 +55,8 @@ export const characterRoutes: FastifyPluginAsync = async (app: FastifyInstance) 
       name,
       avatar,
       lifeFocus,
+      xp: 0,
+      level: 1,
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     };

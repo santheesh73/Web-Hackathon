@@ -5,3 +5,6 @@ export * from './types/character';
 export * from './schemas/character';
 export * from './types/auth';
 export * from './schemas/auth';
+export * from './types/quest';
+export * from './schemas/quest';
+export * from './constants/progression';

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { getSupabaseClient, isSupabaseConfigured } from '@/lib/supabase/client';
@@ -50,6 +50,8 @@ export function useCharacter(): CharacterContextType {
               name: data.name,
               avatar: data.avatar,
               lifeFocus: data.life_focus,
+              xp: data.xp ?? 0,
+              level: data.level ?? 1,
               createdAt: data.created_at,
               updatedAt: data.updated_at,
             };
@@ -142,6 +144,8 @@ export function useCharacter(): CharacterContextType {
           name: data.name,
           avatar: data.avatar,
           lifeFocus: data.life_focus,
+          xp: 0,
+          level: 1,
           createdAt: data.created_at,
           updatedAt: data.updated_at,
         };
@@ -166,6 +170,8 @@ export function useCharacter(): CharacterContextType {
           name: input.name,
           avatar: input.avatar,
           lifeFocus: input.lifeFocus,
+          xp: 0,
+          level: 1,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };

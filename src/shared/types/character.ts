@@ -20,6 +20,8 @@ export interface Character {
   name: string;
   avatar: string;
   lifeFocus: LifeFocus;
+  xp: number;
+  level: number;
   createdAt: string;
   updatedAt: string;
 }

@@ -1,8 +1,10 @@
-﻿import Fastify, { FastifyInstance } from 'fastify';
+import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import { HealthResponseSchema } from '../../src/shared/schemas/health';
 import { API_ROUTES } from '../../src/shared/constants/api';
 import { characterRoutes } from './modules/character/routes';
+import { questRoutes } from './modules/quests/routes';
+import { progressionRoutes } from './modules/progression/routes';
 
 export function buildApp(): FastifyInstance {
   const app = Fastify({
@@ -25,8 +27,10 @@ export function buildApp(): FastifyInstance {
     return reply.status(200).send(validated);
   });
 
-  // Register Character Module
+  // Register Modules
   app.register(characterRoutes);
+  app.register(questRoutes);
+  app.register(progressionRoutes);
 
   return app;
 }
