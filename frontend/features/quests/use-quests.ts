@@ -250,6 +250,17 @@ export function useQuests() {
 
         const updatedQuest = quests.find((q) => q.id === questId);
 
+        const bossDefeat = data.boss_defeat
+          ? {
+              bossId: data.boss_defeat.boss_id,
+              bossTitle: data.boss_defeat.boss_title,
+              difficulty: data.boss_defeat.difficulty,
+              rewardXp: data.boss_defeat.reward_xp,
+              completedAt: data.boss_defeat.completed_at,
+              defeated: true,
+            }
+          : null;
+
         return {
           success: true,
           result: {
@@ -259,7 +270,8 @@ export function useQuests() {
             previousLevel: data.previous_level,
             newLevel: data.new_level,
             leveledUp: data.leveled_up,
-          },
+            bossDefeat,
+          } as any,
         };
       } else {
         // Local storage atomic completion
@@ -396,6 +408,61 @@ export function useQuests() {
           };
         }
 
+        // 5. Boss Objective and Defeat Processing (Local storage mode)
+        let bossDefeat = null;
+        const bossLinksKey = `life_rpg_boss_links_${user.id}`;
+        const bossObjsKey = `life_rpg_boss_objectives_${user.id}`;
+        const bossesKey = `life_rpg_boss_quests_${user.id}`;
+
+        const storedBossLinks = JSON.parse(localStorage.getItem(bossLinksKey) || '[]');
+        const storedBossObjs = JSON.parse(localStorage.getItem(bossObjsKey) || '[]');
+        const storedBosses = JSON.parse(localStorage.getItem(bossesKey) || '[]');
+
+        const linkedLinks = storedBossLinks.filter((l: any) => l.questId === questId);
+        for (const link of linkedLinks) {
+          const obj = storedBossObjs.find((o: any) => o.id === link.objectiveId);
+          if (obj) {
+            const boss = storedBosses.find((b: any) => b.id === obj.bossId);
+            if (boss && boss.status === 'ACTIVE') {
+              const bossObjs = storedBossObjs.filter((o: any) => o.bossId === boss.id);
+              const allObjsCompleted =
+                bossObjs.length > 0 &&
+                bossObjs.every((o: any) => {
+                  const linksForObj = storedBossLinks.filter((l: any) => l.objectiveId === o.id);
+                  const completedLinkedQuests = linksForObj.filter((l: any) => {
+                    const q = list.find((item: any) => item.id === l.questId);
+                    return q && q.status === 'COMPLETED';
+                  });
+                  return completedLinkedQuests.length >= (o.requiredProgress || 1);
+                });
+
+              if (allObjsCompleted) {
+                boss.status = 'COMPLETED';
+                boss.completedAt = new Date().toISOString();
+                boss.updatedAt = new Date().toISOString();
+                localStorage.setItem(bossesKey, JSON.stringify(storedBosses));
+
+                const bossXpReward = boss.rewardXp || 250;
+                charObj.xp = (charObj.xp || 0) + bossXpReward;
+                const levelAfterBoss = getLevelFromXp(charObj.xp);
+                if (levelAfterBoss > charObj.level) {
+                  charObj.level = levelAfterBoss;
+                }
+                charObj.updatedAt = new Date().toISOString();
+
+                bossDefeat = {
+                  bossId: boss.id,
+                  bossTitle: boss.title,
+                  difficulty: boss.difficulty,
+                  rewardXp: bossXpReward,
+                  completedAt: boss.completedAt,
+                  defeated: true,
+                };
+              }
+            }
+          }
+        }
+
         localStorage.setItem(charKey, JSON.stringify(charObj));
         localStorage.setItem(key, JSON.stringify(list));
 
@@ -409,8 +476,8 @@ export function useQuests() {
             xpAwarded: target.xpReward,
             character: charObj,
             previousLevel,
-            newLevel,
-            leveledUp,
+            newLevel: charObj.level,
+            leveledUp: charObj.level > previousLevel,
             streak: {
               currentStreak: streakObj.currentStreak,
               longestStreak: streakObj.longestStreak,
@@ -419,6 +486,7 @@ export function useQuests() {
               isNewRecord,
             },
             chainProgress,
+            bossDefeat,
           } as any,
         };
       }

@@ -43,6 +43,8 @@ import { QuestChainCard } from '@/components/quests/quest-chain-card';
 import { useAttributes } from '@/features/attributes/use-attributes';
 import { useSkillTree } from '@/features/skill-tree/use-skill-tree';
 import { EvolutionBadge } from '@/components/character/evolution-badge';
+import { useBossQuests } from '@/features/boss-quests/use-boss-quests';
+import { BossCard } from '@/components/boss/boss-card';
 
 const AVATAR_ICONS: Record<string, LucideIcon> = {
   Shield,
@@ -60,6 +62,7 @@ export default function DashboardPage() {
   const { chains, loading: chainsLoading } = useQuestChains();
   const { evolution } = useAttributes();
   const { treeData } = useSkillTree();
+  const { activeBoss, bossQuests } = useBossQuests();
 
   React.useEffect(() => {
     if (user && !character) {
@@ -352,40 +355,62 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* 7. Future Expansion Modules Preview */}
+        {/* 7. Boss Quests System */}
+        <div>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h3 className="text-lg font-bold tracking-tight text-foreground flex items-center gap-2">
+                <Flame className="h-5 w-5 text-red-500" /> Active Boss Encounters
+              </h3>
+              <p className="text-xs text-muted-foreground">
+                Major milestones broken into multi-stage battle objectives.
+              </p>
+            </div>
+            <Link
+              href="/boss-quests"
+              className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1"
+            >
+              View Boss Quests ({bossQuests.length}) <ArrowRight className="h-3.5 w-3.5" />
+            </Link>
+          </div>
+
+          {activeBoss ? (
+            <BossCard boss={activeBoss} />
+          ) : (
+            <Card variant="muted" className="p-6 text-center border-dashed border">
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground">
+                  No active Boss Battles underway. Transform a monumental goal into an epic challenge!
+                </p>
+                <Link href="/boss-quests/create">
+                  <Button variant="outline" size="sm" className="gap-1 text-xs mt-1">
+                    <Flame className="h-3.5 w-3.5 text-amber-500" />
+                    <span>Summon a Boss Quest</span>
+                  </Button>
+                </Link>
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {/* 8. Future Expansion Modules Preview */}
         <div>
           <h3 className="text-lg font-bold tracking-tight text-foreground mb-4">
             Upcoming Expansion Modules
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Boss Quests */}
-            <Card variant="muted">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <Flame className="h-5 w-5 text-amber-500" />
-                  <Badge variant="neutral" size="sm">
-                    Upcoming
-                  </Badge>
-                </div>
-                <CardTitle className="text-base mt-2">Boss Milestone Battles</CardTitle>
-                <CardDescription className="text-xs">
-                  Multi-stage epic challenges, countdown deadlines, and massive XP bounties.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-
             {/* Rewards & Shop */}
             <Card variant="muted">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <Store className="h-5 w-5 text-purple-500" />
                   <Badge variant="neutral" size="sm">
-                    Phase 6
+                    Phase 7
                   </Badge>
                 </div>
                 <CardTitle className="text-base mt-2">Shop & Inventory</CardTitle>
                 <CardDescription className="text-xs">
-                  Real-world reward redemption, gold economy, and cosmetic unlocks.
+                  Real-world reward redemption, gold economy, and cosmetic equipment.
                 </CardDescription>
               </CardHeader>
             </Card>
