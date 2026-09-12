@@ -10,6 +10,7 @@ import { questChainRoutes } from './modules/quest-chains/routes';
 import { attributeRoutes } from './modules/attributes/routes';
 import { skillTreeRoutes } from './modules/skill-tree/routes';
 import { bossQuestRoutes } from './modules/boss-quests/routes';
+import { rewardRoutes } from './modules/rewards/routes';
 
 export function buildApp(): FastifyInstance {
   const app = Fastify({
@@ -41,6 +42,7 @@ export function buildApp(): FastifyInstance {
   app.register(attributeRoutes);
   app.register(skillTreeRoutes);
   app.register(bossQuestRoutes);
+  app.register(rewardRoutes);
 
   return app;
 }

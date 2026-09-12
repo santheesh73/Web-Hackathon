@@ -8,6 +8,11 @@ import type { Quest, QuestCompletionResult, QuestStatus } from '@/../src/shared/
 import type { QuestCreationInput } from '@/../src/shared/schemas/quest';
 import { QuestCreationSchema } from '@/../src/shared/schemas/quest';
 import { getXpForDifficulty, getLevelFromXp } from '@/features/progression/level-engine';
+import {
+  getGoldForDifficulty,
+  getGoldForBossDifficulty,
+  CHAIN_COMPLETION_GOLD,
+} from '@/../src/shared/constants/economy';
 
 const LOCAL_STORAGE_QUESTS_PREFIX = 'life_rpg_quests_';
 
@@ -266,6 +271,8 @@ export function useQuests() {
           result: {
             quest: updatedQuest || ({} as Quest),
             xpAwarded: data.xp_awarded,
+            goldAwarded: data.gold_awarded,
+            totalGold: data.total_gold,
             character: character!,
             previousLevel: data.previous_level,
             newLevel: data.new_level,
@@ -463,6 +470,63 @@ export function useQuests() {
           }
         }
 
+        // 6. Gold rewards & transaction recording (Local storage mode)
+        const questGold = getGoldForDifficulty(target.difficulty);
+        const chainGold = chainProgress?.isChainCompleted ? CHAIN_COMPLETION_GOLD : 0;
+        const bossGold = bossDefeat ? getGoldForBossDifficulty(bossDefeat.difficulty) : 0;
+        const totalGoldAwarded = questGold + chainGold + bossGold;
+
+        const currentGold = charObj.gold || 0;
+        charObj.gold = currentGold + totalGoldAwarded;
+
+        const txKey = `life_rpg_transactions_${user.id}`;
+        const storedTxs = JSON.parse(localStorage.getItem(txKey) || '[]');
+        const nowIso = new Date().toISOString();
+
+        storedTxs.unshift({
+          id: 'tx-' + Date.now(),
+          characterId: charObj.id,
+          userId: user.id,
+          type: 'EARN',
+          amount: questGold,
+          balanceAfter: currentGold + questGold,
+          source: 'QUEST_COMPLETION',
+          referenceId: target.id,
+          description: `Earned from quest: ${target.title}`,
+          createdAt: nowIso,
+        });
+
+        if (chainGold > 0 && chainProgress) {
+          storedTxs.unshift({
+            id: 'tx-' + (Date.now() + 1),
+            characterId: charObj.id,
+            userId: user.id,
+            type: 'EARN',
+            amount: chainGold,
+            balanceAfter: currentGold + questGold + chainGold,
+            source: 'CHAIN_COMPLETION',
+            referenceId: chainProgress.chainId,
+            description: `Bonus for completing quest chain: ${chainProgress.chainTitle}`,
+            createdAt: nowIso,
+          });
+        }
+
+        if (bossGold > 0 && bossDefeat) {
+          storedTxs.unshift({
+            id: 'tx-' + (Date.now() + 2),
+            characterId: charObj.id,
+            userId: user.id,
+            type: 'EARN',
+            amount: bossGold,
+            balanceAfter: charObj.gold,
+            source: 'BOSS_COMPLETION',
+            referenceId: bossDefeat.bossId,
+            description: `Bounty for defeating boss: ${bossDefeat.bossTitle}`,
+            createdAt: nowIso,
+          });
+        }
+
+        localStorage.setItem(txKey, JSON.stringify(storedTxs));
         localStorage.setItem(charKey, JSON.stringify(charObj));
         localStorage.setItem(key, JSON.stringify(list));
 
@@ -474,6 +538,9 @@ export function useQuests() {
           result: {
             quest: target,
             xpAwarded: target.xpReward,
+            goldAwarded: totalGoldAwarded,
+            totalGold: charObj.gold,
+            bonusGold: chainGold + bossGold,
             character: charObj,
             previousLevel,
             newLevel: charObj.level,

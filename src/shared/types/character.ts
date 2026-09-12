@@ -25,6 +25,7 @@ export interface Character {
   skillPoints: number;
   evolutionTier: number;
   evolutionTitle: string;
+  gold: number;
   createdAt: string;
   updatedAt: string;
 }

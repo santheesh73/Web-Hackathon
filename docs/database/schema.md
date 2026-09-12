@@ -242,3 +242,69 @@ Atomic multi-system transaction (Updated Phase 6):
 | `user_id` | UUID | FK -> `auth.users(id)` ON DELETE CASCADE | User ownership |
 | `created_at` | TIMESTAMPTZ | NOT NULL | Link timestamp |
 | *Constraint* | UNIQUE | `(objective_id, quest_id)` | Duplicate link prevention |
+
+---
+
+## Phase 7 Tables & Economy System
+
+### `public.characters` (Updated)
+Added canonical currency balance:
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `gold` | `INTEGER` | `NOT NULL DEFAULT 0 CHECK (gold >= 0)` | Earned virtual currency balance |
+
+### `public.shop_items`
+Curated marketplace catalog for non-consumable rewards:
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Item ID |
+| `key` | VARCHAR(100) | `UNIQUE NOT NULL` | Stable program key |
+| `name` | VARCHAR(100) | NOT NULL | Display name |
+| `description` | TEXT | NOT NULL | Item description |
+| `category` | VARCHAR(20) | CHECK in ('AVATAR', 'THEME', 'BADGE', 'COSMETIC') | Item category |
+| `price` | INTEGER | NOT NULL CHECK (price >= 0) | Server-authoritative Gold cost |
+| `icon` | VARCHAR(50) | NULLABLE | Lucide icon identifier |
+| `preview_color` | VARCHAR(20) | NULLABLE | Accent hex color |
+| `rarity` | VARCHAR(20) | CHECK in ('COMMON', 'RARE', 'EPIC', 'LEGENDARY') | Item rarity |
+| `metadata` | JSONB | DEFAULT '{}' | Extensible metadata |
+| `is_active` | BOOLEAN | NOT NULL DEFAULT true | Catalog availability flag |
+| `created_at` | TIMESTAMPTZ | NOT NULL | Creation timestamp |
+| `updated_at` | TIMESTAMPTZ | NOT NULL | Update timestamp |
+
+### `public.purchases`
+Immutable record of item ownership:
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Primary Key |
+| `character_id` | UUID | FK -> `characters(id)` ON DELETE CASCADE | Character owner |
+| `user_id` | UUID | FK -> `auth.users(id)` ON DELETE CASCADE | User owner |
+| `item_id` | UUID | FK -> `shop_items(id)` ON DELETE RESTRICT | Purchased item |
+| `price_paid` | INTEGER | NOT NULL CHECK (price_paid >= 0) | Exact gold price paid |
+| `purchased_at` | TIMESTAMPTZ | NOT NULL | Transaction timestamp |
+| *Constraint* | UNIQUE | `(character_id, item_id)` | Strict duplicate purchase prevention |
+
+### `public.economy_transactions`
+Immutable audit ledger for all currency events:
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Primary Key |
+| `character_id` | UUID | FK -> `characters(id)` ON DELETE CASCADE | Character ID |
+| `user_id` | UUID | FK -> `auth.users(id)` ON DELETE CASCADE | User ID |
+| `type` | VARCHAR(10) | CHECK in ('EARN', 'SPEND') | Transaction type |
+| `amount` | INTEGER | NOT NULL CHECK (amount > 0) | Gold amount transferred |
+| `balance_after` | INTEGER | NOT NULL CHECK (balance_after >= 0) | Balance snapshot post-action |
+| `source` | VARCHAR(30) | CHECK in ('QUEST_COMPLETION', 'CHAIN_COMPLETION', 'BOSS_COMPLETION', 'SHOP_PURCHASE', 'SYSTEM_GRANT', 'MILESTONE_BONUS') | Source trigger |
+| `reference_id` | UUID | NULLABLE | Origin ID (quest, purchase, boss) |
+| `description` | TEXT | NULLABLE | Human-readable log narrative |
+| `created_at` | TIMESTAMPTZ | NOT NULL | Immutable ledger timestamp |
+
+### Stored Procedure: `public.purchase_shop_item(p_item_id UUID) -> JSONB`
+1. Authenticates caller (`auth.uid()`).
+2. Locks character profile with `SELECT * FROM characters WHERE user_id = auth.uid() FOR UPDATE`.
+3. Verifies item exists and is active.
+4. Enforces duplicate check: throws `409 Item already owned` if previously purchased.
+5. Enforces balance check: throws `400 Insufficient gold` if `character.gold < item.price`.
+6. Deducts `gold = gold - item.price`.
+7. Inserts record into `purchases`.
+8. Inserts `SPEND` ledger entry into `economy_transactions`.
+9. Returns structured `{ success: true, purchase, remaining_gold, item }`.

@@ -48,6 +48,13 @@ import {
   buildBossWithDetails,
 } from '../boss-quests/routes';
 import type { BossCompletionResult } from '../../../../src/shared/types/boss-quest';
+import {
+  getGoldForDifficulty,
+  getGoldForBossDifficulty,
+  CHAIN_COMPLETION_GOLD,
+} from '../../../../src/shared/constants/economy';
+import { recordTransaction } from '../rewards/routes';
+import { randomUUID } from 'crypto';
 
 const CompleteQuestBodySchema = z.object({
   questId: z.string().min(1, 'Quest ID is required'),
@@ -128,6 +135,7 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
           xp: 0,
           level: 1,
           skillPoints: 0,
+          gold: 0,
           evolutionTier: 1,
           evolutionTitle: 'Initiate',
           createdAt: completedAt,
@@ -335,11 +343,69 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
             bossTitle: boss.title,
             difficulty: boss.difficulty,
             rewardXp: boss.rewardXp,
+            rewardGold: getGoldForBossDifficulty(boss.difficulty),
             completedAt,
             defeated: true,
           };
         }
       }
+    }
+
+    // 9. Gold Rewards & Economy Ledger Processing
+    const questGold = getGoldForDifficulty(quest.difficulty);
+    const chainGold = chainProgress?.isChainCompleted ? CHAIN_COMPLETION_GOLD : 0;
+    const bossGold = bossDefeat ? getGoldForBossDifficulty(bossDefeat.difficulty) : 0;
+    const totalGoldAwarded = questGold + chainGold + bossGold;
+
+    const goldBefore = character.gold ?? 0;
+    character.gold = goldBefore + totalGoldAwarded;
+    character.updatedAt = completedAt;
+    saveCharacter(character);
+
+    // Record EARN transaction for base quest
+    recordTransaction({
+      id: randomUUID(),
+      characterId: character.id,
+      userId,
+      type: 'EARN',
+      amount: questGold,
+      balanceAfter: goldBefore + questGold,
+      source: 'QUEST_COMPLETION',
+      referenceId: quest.id,
+      description: `Earned from quest: ${quest.title}`,
+      createdAt: completedAt,
+    });
+
+    // Record EARN transaction for chain completion bonus
+    if (chainGold > 0 && chainProgress) {
+      recordTransaction({
+        id: randomUUID(),
+        characterId: character.id,
+        userId,
+        type: 'EARN',
+        amount: chainGold,
+        balanceAfter: goldBefore + questGold + chainGold,
+        source: 'CHAIN_COMPLETION',
+        referenceId: chainProgress.chainId,
+        description: `Bonus for completing quest chain: ${chainProgress.chainTitle}`,
+        createdAt: completedAt,
+      });
+    }
+
+    // Record EARN transaction for boss defeat bounty
+    if (bossGold > 0 && bossDefeat) {
+      recordTransaction({
+        id: randomUUID(),
+        characterId: character.id,
+        userId,
+        type: 'EARN',
+        amount: bossGold,
+        balanceAfter: character.gold,
+        source: 'BOSS_COMPLETION',
+        referenceId: bossDefeat.bossId,
+        description: `Bounty for defeating boss: ${bossDefeat.bossTitle}`,
+        createdAt: completedAt,
+      });
     }
 
     const result: QuestCompletionResult & {
@@ -355,6 +421,9 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
     } = {
       quest,
       xpAwarded,
+      goldAwarded: totalGoldAwarded,
+      totalGold: character.gold,
+      bonusGold: chainGold + bossGold,
       character,
       previousLevel,
       newLevel: character.level,

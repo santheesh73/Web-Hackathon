@@ -19,6 +19,10 @@ export function getQuestsByUserId(userId: string): Quest[] {
   return Array.from(questsById.values()).filter((q) => q.userId === userId);
 }
 
+export function resetQuestsStore(): void {
+  questsById.clear();
+}
+
 export const questRoutes: FastifyPluginAsync = async (app: FastifyInstance) => {
   // GET /quests - retrieve all quests for the authenticated user
   app.get<{ Querystring: { status?: QuestStatus } }>('/quests', async (request, reply) => {

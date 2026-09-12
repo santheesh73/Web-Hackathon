@@ -1,4 +1,4 @@
-﻿import type { Quest } from './quest';
+import type { Quest } from './quest';
 
 export type BossDifficulty = 'Rare' | 'Epic' | 'Legendary';
 
@@ -41,6 +41,7 @@ export interface BossQuest {
   status: BossStatus;
   deadline?: string;
   rewardXp: number;
+  rewardGold?: number;
   createdAt: string;
   updatedAt: string;
   completedAt?: string;
@@ -59,6 +60,7 @@ export interface BossCompletionResult {
   bossTitle: string;
   difficulty: BossDifficulty;
   rewardXp: number;
+  rewardGold?: number;
   completedAt: string;
   defeated: boolean;
 }

@@ -59,6 +59,7 @@ export const characterRoutes: FastifyPluginAsync = async (app: FastifyInstance) 
       xp: 0,
       level: 1,
       skillPoints: 0,
+      gold: 0,
       evolutionTier: 1,
       evolutionTitle: getEvolutionTitle(avatar, 1),
       createdAt: new Date().toISOString(),

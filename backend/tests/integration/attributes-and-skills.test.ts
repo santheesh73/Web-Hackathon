@@ -31,6 +31,7 @@ describe('Attributes, Skills & Evolution API (Integration)', () => {
       xp: 0,
       level: 1,
       skillPoints: 0,
+      gold: 0,
       evolutionTier: 1,
       evolutionTitle: 'Vanguard Recruit',
       createdAt: new Date().toISOString(),

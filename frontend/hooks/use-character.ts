@@ -55,6 +55,7 @@ export function useCharacter(): CharacterContextType {
               skillPoints: data.skill_points ?? 0,
               evolutionTier: data.evolution_tier ?? 1,
               evolutionTitle: data.evolution_title ?? 'Initiate',
+              gold: data.gold ?? 0,
               createdAt: data.created_at,
               updatedAt: data.updated_at,
             };
@@ -152,6 +153,7 @@ export function useCharacter(): CharacterContextType {
           skillPoints: 0,
           evolutionTier: 1,
           evolutionTitle: 'Initiate',
+          gold: 0,
           createdAt: data.created_at,
           updatedAt: data.updated_at,
         };
@@ -181,6 +183,7 @@ export function useCharacter(): CharacterContextType {
           skillPoints: 0,
           evolutionTier: 1,
           evolutionTitle: 'Initiate',
+          gold: 0,
           createdAt: new Date().toISOString(),
           updatedAt: new Date().toISOString(),
         };

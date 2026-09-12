@@ -15,6 +15,11 @@ export const API_ROUTES = {
   BOSS_QUESTS: '/boss-quests',
   BOSS_OBJECTIVES: '/boss-quests/:bossId/objectives',
   BOSS_LINK_QUEST: '/boss-quests/:bossId/link-quest',
+  SHOP: '/shop',
+  SHOP_ITEM: '/shop/:itemId',
+  SHOP_PURCHASE: '/shop/:itemId/purchase',
+  ECONOMY_TRANSACTIONS: '/economy/transactions',
+  REWARDS: '/rewards',
 } as const;
 
 export const DEFAULT_PORTS = {

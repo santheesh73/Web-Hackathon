@@ -41,4 +41,8 @@ export interface QuestCompletionResult {
   skillPointsEarned?: number;
   unspentSkillPoints?: number;
   evolution?: EvolutionCalculationResult;
+  goldAwarded?: number;
+  totalGold?: number;
+  bonusGold?: number;
+  bonusReason?: string;
 }

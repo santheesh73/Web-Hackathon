@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
@@ -8,6 +8,9 @@ import { Tooltip } from '@/components/ui/tooltip';
 import { Dialog } from '@/components/ui/dialog';
 import { getHealthStatus } from '@/lib/api';
 import { useAuth } from '@/hooks/use-auth';
+import { useCharacter } from '@/hooks/use-character';
+import { CurrencyDisplay } from '@/components/economy/currency-display';
+import Link from 'next/link';
 
 export interface TopbarProps {
   onMobileMenuOpen: () => void;
@@ -18,6 +21,7 @@ export interface TopbarProps {
 export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }: TopbarProps) {
   const router = useRouter();
   const { signOut } = useAuth();
+  const { character } = useCharacter();
   const [apiConnected, setApiConnected] = React.useState<boolean | null>(null);
   const [isNewQuestOpen, setIsNewQuestOpen] = React.useState(false);
 
@@ -82,13 +86,11 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }:
             </div>
           </Tooltip>
 
-          {/* Streak Indicator (Visual Preview) */}
-          <Tooltip content="Streak Indicator (Phase 3 Gameplay)">
-            <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold cursor-default">
-              <Flame className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-              <span>0</span>
-            </div>
-          </Tooltip>
+          {/* Gold Balance Indicator */}
+          <Link href="/shop" className="hover:opacity-90 transition-opacity">
+            <CurrencyDisplay amount={character?.gold ?? 0} size="sm" />
+          </Link>
+
 
           {/* Quick Action Button */}
           <Button

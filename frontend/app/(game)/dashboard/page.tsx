@@ -45,6 +45,7 @@ import { useSkillTree } from '@/features/skill-tree/use-skill-tree';
 import { EvolutionBadge } from '@/components/character/evolution-badge';
 import { useBossQuests } from '@/features/boss-quests/use-boss-quests';
 import { BossCard } from '@/components/boss/boss-card';
+import { CurrencyDisplay } from '@/components/economy/currency-display';
 
 const AVATAR_ICONS: Record<string, LucideIcon> = {
   Shield,
@@ -118,7 +119,10 @@ export default function DashboardPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <Link href="/shop" className="hover:opacity-90 transition-opacity">
+                <CurrencyDisplay amount={character?.gold ?? 0} size="md" />
+              </Link>
               <Link href="/quests/create">
                 <Button variant="rpg" size="sm" className="gap-1.5 shadow-sm">
                   <PlusCircle className="h-4 w-4" /> New Quest
@@ -393,27 +397,32 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* 8. Future Expansion Modules Preview */}
+        {/* 8. Marketplace & Future Expansion Modules */}
         <div>
           <h3 className="text-lg font-bold tracking-tight text-foreground mb-4">
-            Upcoming Expansion Modules
+            Economy & Expansion Modules
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Rewards & Shop */}
-            <Card variant="muted">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <Store className="h-5 w-5 text-purple-500" />
-                  <Badge variant="neutral" size="sm">
-                    Phase 7
-                  </Badge>
-                </div>
-                <CardTitle className="text-base mt-2">Shop & Inventory</CardTitle>
-                <CardDescription className="text-xs">
-                  Real-world reward redemption, gold economy, and cosmetic equipment.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            {/* Rewards & Shop (Live Phase 7) */}
+            <Link href="/shop" className="block">
+              <Card variant="interactive" className="border-amber-500/30 hover:border-amber-500/60 transition-all">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <Store className="h-5 w-5 text-amber-500" />
+                    <Badge variant="rpg" size="sm">
+                      Phase 7 Live
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-base mt-2 flex items-center justify-between">
+                    <span>Reward Marketplace</span>
+                    <ArrowRight className="h-4 w-4 text-amber-500" />
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Spend your earned Gold on avatar archetypes, themes, achievement badges, and cosmetic flair.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
           </div>
         </div>
       </div>

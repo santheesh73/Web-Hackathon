@@ -457,3 +457,64 @@
   ```
 - **Response (200 OK)**: `{ "success": true, "message": "Quest unlinked successfully" }`.
 
+---
+
+## Phase 7: Shop & Economy API Endpoints
+
+### List Shop Catalog
+- **Method**: `GET`
+- **Path**: `/shop`
+- **Headers**: `Authorization: Bearer <token>`
+- **Query Parameters**:
+  - `category`: Optional filter (`AVATAR`, `THEME`, `BADGE`, `COSMETIC`)
+  - `search`: Optional search query
+- **Description**: Returns all active catalog items annotated with caller's ownership (`isOwned: boolean`, `purchasedAt?: string`).
+- **Response (200 OK)**: `ShopItemWithOwnership[]`.
+
+### Get Single Shop Item
+- **Method**: `GET`
+- **Path**: `/shop/:itemId`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Retrieves single item metadata and caller's ownership status.
+- **Response (200 OK)**: `ShopItemWithOwnership`.
+- **Response (404 Not Found)**: Item not found or inactive.
+
+### Purchase Shop Item
+- **Method**: `POST`
+- **Path**: `/shop/:itemId/purchase`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Description**: Atomically purchases a shop item. Row-locks caller character to prevent concurrent race conditions (double spending). Validates item availability, enforces duplicate purchase rejection, deducts gold, and inserts a `SPEND` ledger entry into `economy_transactions`.
+- **Response (200 OK)**:
+  ```json
+  {
+    "success": true,
+    "purchase": {
+      "id": "purch-uuid",
+      "characterId": "char-123",
+      "userId": "user-456",
+      "itemId": "item-uuid",
+      "pricePaid": 75,
+      "purchasedAt": "2026-09-12T10:15:00.000Z"
+    },
+    "remainingGold": 25,
+    "item": { ... }
+  }
+  ```
+- **Response (400 Bad Request)**: Insufficient gold balance (`{ "error": "Insufficient gold", "required": 75, "available": 25 }`).
+- **Response (404 Not Found)**: Item not found or inactive.
+- **Response (409 Conflict)**: Item already owned (`{ "error": "Item already owned" }`).
+
+### Get Economy Transaction Ledger
+- **Method**: `GET`
+- **Path**: `/economy/transactions`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Returns caller's immutable audit history of all `EARN` and `SPEND` currency transactions, sorted by newest first.
+- **Response (200 OK)**: `EconomyTransaction[]`.
+
+### Get Rewards Summary
+- **Method**: `GET`
+- **Path**: `/rewards`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Aggregates available gold, lifetime earned gold, lifetime spent gold, owned items count, and recent transactions.
+- **Response (200 OK)**: `RewardsSummary`.
+
