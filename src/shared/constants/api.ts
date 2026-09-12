@@ -20,6 +20,11 @@ export const API_ROUTES = {
   SHOP_PURCHASE: '/shop/:itemId/purchase',
   ECONOMY_TRANSACTIONS: '/economy/transactions',
   REWARDS: '/rewards',
+  INVENTORY: '/inventory',
+  INVENTORY_ITEM: '/inventory/:itemId',
+  INVENTORY_EQUIP: '/inventory/:itemId/equip',
+  INVENTORY_UNEQUIP: '/inventory/:itemId/unequip',
+  CHARACTER_EQUIPMENT: '/character/equipment',
 } as const;
 
 export const DEFAULT_PORTS = {

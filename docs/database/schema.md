@@ -308,3 +308,41 @@ Immutable audit ledger for all currency events:
 7. Inserts record into `purchases`.
 8. Inserts `SPEND` ledger entry into `economy_transactions`.
 9. Returns structured `{ success: true, purchase, remaining_gold, item }`.
+
+---
+
+## Phase 8 Tables & Equipment System
+
+### `public.character_equipment`
+Stores active loadout slot assignments for each character. Customization only — zero combat equipment.
+
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Equipment entry ID |
+| `character_id` | UUID | FK -> `characters(id)` ON DELETE CASCADE | Character owner |
+| `user_id` | UUID | FK -> `auth.users(id)` ON DELETE CASCADE | User owner |
+| `slot` | VARCHAR(20) | CHECK in ('AVATAR', 'THEME', 'BADGE', 'COSMETIC') | Equipment slot |
+| `item_id` | UUID | FK -> `shop_items(id)` ON DELETE CASCADE | Equipped shop item |
+| `purchase_id` | UUID | FK -> `purchases(id)` ON DELETE CASCADE | Verified purchase ownership reference |
+| `equipped_at` | TIMESTAMPTZ | NOT NULL DEFAULT now() | Equipped timestamp |
+| `updated_at` | TIMESTAMPTZ | NOT NULL DEFAULT now() | Update timestamp |
+| *Constraint* | UNIQUE | `(character_id, slot)` | Enforces exactly 1 item per slot per character |
+
+### Stored Procedure: `public.equip_item(p_item_id UUID) -> JSONB`
+1. Authenticates caller (`auth.uid()`).
+2. Verifies character exists.
+3. Verifies active shop item exists.
+4. Validates target slot based on item category (`AVATAR`, `THEME`, `BADGE`, `COSMETIC`).
+5. Enforces ownership: verifies caller has a valid purchase record in `purchases` for `(character_id, item_id)`. Rejects unowned equip attempts.
+6. Performs atomic UPSERT on `character_equipment(character_id, slot)`:
+   - If slot is empty: inserts new equipment assignment.
+   - If slot is occupied: replaces the existing item with the new item without deleting the previous item from inventory.
+7. Returns `{ success: true, equipped: { itemId, slot, name }, replacedItemId: previous_item_id | null }`.
+
+### Stored Procedure: `public.unequip_item(p_slot VARCHAR) -> JSONB`
+1. Authenticates caller (`auth.uid()`).
+2. Validates slot name.
+3. Checks if item is currently equipped in `character_equipment(character_id, slot)`.
+4. Deletes equipment assignment for slot.
+5. Returns `{ success: true, unequipped: { itemId, slot, name } }`.
+

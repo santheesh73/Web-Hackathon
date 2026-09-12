@@ -48,6 +48,35 @@ Dashboard (/dashboard)
                   └─► Advances linked Boss Objectives & triggers Boss Defeat bounty if all objectives cleared
 ```
 
+### Phase 7 & 8 Economy, Inventory & Customization Loop
+```
+Quests / Chains / Bosses
+         │
+         ├─► Gold Currency Earned (Server-authoritative reward formula)
+         │
+         ▼
+Reward Marketplace (/shop)
+         │
+         ├─► Browse Catalog (Avatars, Themes, Badges, Cosmetics)
+         ├─► Purchase Item (Atomic balance deduction & duplicate ownership prevention)
+         │
+         ▼
+Inventory & Equipment (/inventory)
+         │
+         ├─► Inventory Bag (Filter, Search, Sort owned gear)
+         ├─► Equipment Slots (AVATAR, THEME, BADGE, COSMETIC)
+         ├─► Equip & Slot Replacement (Atomic 1-per-slot replacement)
+         └─► Unequip (Slot cleared, item preserved in bag)
+         │
+         ▼
+Character Customization (/character & app-wide)
+         │
+         ├─► Equipped Avatar Archetype & Silhouette
+         ├─► Equipped UI Theme & Accent Styling
+         ├─► Equipped Honor Crest & Title Badge
+         └─► Equipped Cosmetic Aura & Particle Effect
+```
+
 ## Core Architectural Invariants
 1. **Deterministic Calendar Day & Timezone Strategy**:
    - Streaks are strictly anchored to **UTC calendar dates (`YYYY-MM-DD`)**.
@@ -74,3 +103,14 @@ Dashboard (/dashboard)
    - Objective completion is derived from completed linked quests (`completed >= required`).
    - Boss progress is derived from completed objectives fraction (`completed_objectives / total_objectives * 100`).
    - Defeating a Boss grants fixed difficulty XP bounty (`Rare`: 250 XP, `Epic`: 500 XP, `Legendary`: 1000 XP) exactly once. Completed Bosses become immutable read-only records.
+8. **Item Lifecycle Separation & Ownership Authority**:
+   - Item lifecycle strictly follows `SHOP ITEM` $\rightarrow$ `PURCHASE` $\rightarrow$ `INVENTORY ITEM` $\rightarrow$ `EQUIPPED ITEM` $\rightarrow$ `CHARACTER APPEARANCE`.
+   - Ownership is permanently recorded in `purchases` (`UNIQUE(character_id, item_id)`).
+   - Only purchased items can be equipped. Unowned equip attempts are rejected by both database stored procedure and API with `400 Bad Request`.
+9. **Equipment Slot Replacement Rule**:
+   - Equipment slots strictly mirror cosmetic categories (`AVATAR`, `THEME`, `BADGE`, `COSMETIC`). Absolutely no combat RPG equipment (no weapons, armor, helmets, shields).
+   - Exactly one item per slot per character is enforced by `UNIQUE(character_id, slot)` constraint.
+   - Equipping a new item automatically replaces the previous item in that slot without deleting or removing the old item from the user's inventory.
+   - Unequipping clears the slot assignment while the item remains safely in inventory.
+   - Equipment changes do not alter progression, XP, levels, attributes, or skill trees.
+

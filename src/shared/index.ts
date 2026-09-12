@@ -25,3 +25,6 @@ export * from './schemas/boss-quest';
 export * from './types/economy';
 export * from './constants/economy';
 export * from './schemas/economy';
+export * from './types/inventory';
+export * from './constants/inventory';
+export * from './schemas/inventory';

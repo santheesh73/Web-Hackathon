@@ -518,3 +518,80 @@
 - **Description**: Aggregates available gold, lifetime earned gold, lifetime spent gold, owned items count, and recent transactions.
 - **Response (200 OK)**: `RewardsSummary`.
 
+---
+
+## Phase 8: Inventory & Equipment API Endpoints
+
+### List Inventory Items
+- **Method**: `GET`
+- **Path**: `/inventory`
+- **Headers**: `Authorization: Bearer <token>`
+- **Query Parameters**:
+  - `category`: Optional filter (`ALL`, `AVATAR`, `THEME`, `BADGE`, `COSMETIC`)
+  - `search`: Optional search query string
+  - `sortBy`: Optional sort order (`RECENT`, `NAME`, `CATEGORY`)
+- **Description**: Returns all items owned by the caller's character, annotated with active equipment status (`isEquipped: boolean`, `equippedSlot?: EquipmentSlot`).
+- **Response (200 OK)**: `InventoryItem[]`.
+
+### Get Single Inventory Item
+- **Method**: `GET`
+- **Path**: `/inventory/:itemId`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Retrieves single owned inventory item with its current equipment state.
+- **Response (200 OK)**: `InventoryItem`.
+- **Response (404 Not Found)**: Item not found in caller's inventory.
+
+### Equip Item
+- **Method**: `POST`
+- **Path**: `/inventory/:itemId/equip`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Description**: Equips an owned item into its matching category slot (`AVATAR`, `THEME`, `BADGE`, or `COSMETIC`). Enforces server-authoritative ownership check. Atomically replaces any item currently equipped in the target slot without deleting the previous item from inventory.
+- **Response (200 OK)**:
+  ```json
+  {
+    "success": true,
+    "equipped": {
+      "itemId": "item-uuid",
+      "slot": "AVATAR",
+      "name": "Cyber Samurai"
+    },
+    "replacedItemId": "previous-item-uuid"
+  }
+  ```
+- **Response (400 Bad Request)**: Item not owned by character.
+- **Response (404 Not Found)**: Item does not exist or is inactive.
+
+### Unequip Item
+- **Method**: `POST`
+- **Path**: `/inventory/:itemId/unequip`
+- **Headers**: `Authorization: Bearer <token>`, `Content-Type: application/json`
+- **Description**: Unequips an equipped item, clearing its slot assignment. The item remains safely in the user's inventory.
+- **Response (200 OK)**:
+  ```json
+  {
+    "success": true,
+    "unequipped": {
+      "itemId": "item-uuid",
+      "slot": "AVATAR",
+      "name": "Cyber Samurai"
+    }
+  }
+  ```
+- **Response (400 Bad Request)**: Item is not currently equipped in its slot.
+
+### Get Character Equipment Loadout
+- **Method**: `GET`
+- **Path**: `/character/equipment`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Returns a map of the character's currently equipped items across all 4 slots.
+- **Response (200 OK)**:
+  ```json
+  {
+    "AVATAR": { "id": "uuid", "name": "Cyber Samurai", ... },
+    "THEME": { "id": "uuid", "name": "Obsidian & Gold", ... },
+    "BADGE": { "id": "uuid", "name": "Master Strategist", ... },
+    "COSMETIC": { "id": "uuid", "name": "Aura of Focus", ... }
+  }
+  ```
+
+

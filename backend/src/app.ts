@@ -11,6 +11,7 @@ import { attributeRoutes } from './modules/attributes/routes';
 import { skillTreeRoutes } from './modules/skill-tree/routes';
 import { bossQuestRoutes } from './modules/boss-quests/routes';
 import { rewardRoutes } from './modules/rewards/routes';
+import { inventoryRoutes } from './modules/inventory/routes';
 
 export function buildApp(): FastifyInstance {
   const app = Fastify({
@@ -43,6 +44,7 @@ export function buildApp(): FastifyInstance {
   app.register(skillTreeRoutes);
   app.register(bossQuestRoutes);
   app.register(rewardRoutes);
+  app.register(inventoryRoutes);
 
   return app;
 }

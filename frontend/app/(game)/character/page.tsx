@@ -20,9 +20,11 @@ import { useAuth } from '@/hooks/use-auth';
 import { useCharacter } from '@/hooks/use-character';
 import { useAttributes } from '@/features/attributes/use-attributes';
 import { useSkillTree } from '@/features/skill-tree/use-skill-tree';
+import { useInventory } from '@/features/inventory/use-inventory';
 import { AttributeRadar } from '@/components/character/attribute-radar';
 import { AttributeCard } from '@/components/character/attribute-card';
 import { EvolutionBadge } from '@/components/character/evolution-badge';
+import { EquippedFlair } from '@/components/character/equipped-flair';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -41,9 +43,13 @@ export default function CharacterPage() {
   const { character } = useCharacter();
   const { attributes, progress, evolution, loading: attrLoading } = useAttributes();
   const { treeData } = useSkillTree();
+  const { equipment } = useInventory();
 
   const avatarKey = character?.avatar || 'warrior';
   const AvatarIcon = AVATAR_ICONS[avatarKey.toLowerCase()] || Shield;
+  const equippedAvatar = equipment.AVATAR;
+  const equippedBadge = equipment.BADGE;
+  const equippedCosmetic = equipment.COSMETIC;
 
   const unlockedSkills = React.useMemo(() => {
     if (!treeData) return [];
@@ -63,21 +69,48 @@ export default function CharacterPage() {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <div
-              className={`w-16 h-16 rounded-2xl border flex items-center justify-center bg-background shadow-md ${
+              className={`w-16 h-16 rounded-2xl border flex items-center justify-center bg-background shadow-md relative transition-all ${
                 evolution?.auraClass || ''
               }`}
+              style={
+                equippedAvatar?.previewColor
+                  ? {
+                      borderColor: `${equippedAvatar.previewColor}80`,
+                      boxShadow: `0 0 15px ${equippedAvatar.previewColor}30`,
+                    }
+                  : undefined
+              }
             >
-              <AvatarIcon className="w-8 h-8 text-primary" />
+              <AvatarIcon
+                className="w-8 h-8 text-primary"
+                style={equippedAvatar?.previewColor ? { color: equippedAvatar.previewColor } : undefined}
+              />
+              {equippedCosmetic && (
+                <div
+                  className="absolute -inset-1 rounded-2xl border border-dashed opacity-60 animate-pulse pointer-events-none"
+                  style={
+                    equippedCosmetic.previewColor
+                      ? { borderColor: equippedCosmetic.previewColor }
+                      : { borderColor: 'hsl(var(--primary))' }
+                  }
+                />
+              )}
             </div>
 
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h1 className="text-2xl font-bold text-foreground tracking-tight">
                   {character?.name || 'Adventurer'}
                 </h1>
                 <Badge variant="rpg" size="sm">
                   Lvl {character?.level || 1}
                 </Badge>
+                {equippedBadge && (
+                  <Badge variant="warning" size="sm" className="gap-1 font-semibold">
+                    <Sparkles className="w-3 h-3 text-amber-500" />
+                    {equippedBadge.name}
+                  </Badge>
+                )}
               </div>
 
               {evolution && (
@@ -107,6 +140,9 @@ export default function CharacterPage() {
           </div>
         </div>
       </div>
+
+      {/* Active Equipment & Cosmetic Flair */}
+      <EquippedFlair equipment={equipment} />
 
       {/* Main Grid: Radar & Attributes */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
