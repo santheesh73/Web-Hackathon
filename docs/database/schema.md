@@ -346,3 +346,59 @@ Stores active loadout slot assignments for each character. Customization only â€
 4. Deletes equipment assignment for slot.
 5. Returns `{ success: true, unequipped: { itemId, slot, name } }`.
 
+---
+
+## Phase 9 Tables & Achievements System
+
+### `public.achievements`
+Stores the static catalog of honor badges and milestone definitions.
+
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Achievement ID |
+| `key` | VARCHAR(50) | NOT NULL UNIQUE | Unique machine key (e.g. `FIRST_QUEST`) |
+| `name` | VARCHAR(100) | NOT NULL | Display title of achievement |
+| `description` | TEXT | NOT NULL | Milestone description |
+| `category` | VARCHAR(30) | NOT NULL CHECK in ('QUESTS', 'STREAKS', 'QUEST_CHAINS', 'BOSS_QUESTS', 'PROGRESSION', 'SKILLS', 'ECONOMY', 'INVENTORY') | Progress category |
+| `icon` | VARCHAR(50) | NOT NULL | Lucide icon identifier |
+| `requirement_type` | VARCHAR(50) | NOT NULL CHECK in ('QUEST_COUNT', 'STREAK_DAYS', 'QUEST_CHAIN_COUNT', 'BOSS_COMPLETION_COUNT', 'PLAYER_LEVEL', 'SKILL_COUNT', 'GOLD_EARNED', 'ITEM_COUNT', 'EQUIPPED_ITEM_COUNT') | Deterministic metric source |
+| `target` | INTEGER | NOT NULL CHECK (target > 0) | Quantitative threshold required to unlock |
+| `is_active` | BOOLEAN | NOT NULL DEFAULT true | System availability toggle |
+| `created_at` | TIMESTAMPTZ | NOT NULL DEFAULT now() | Creation timestamp |
+
+### `public.user_achievements`
+Stores per-character achievement progress and unlock milestones.
+
+| Column | Type | Constraints | Description |
+|---|---|---|---|
+| `id` | UUID | PK, default `gen_random_uuid()` | Record identifier |
+| `character_id` | UUID | FK -> `characters(id)` ON DELETE CASCADE | Character owner |
+| `user_id` | UUID | FK -> `auth.users(id)` ON DELETE CASCADE | User account owner |
+| `achievement_id` | UUID | FK -> `achievements(id)` ON DELETE CASCADE | Achievement reference |
+| `progress` | INTEGER | NOT NULL DEFAULT 0 CHECK (progress >= 0) | Current quantitative progress toward target |
+| `is_unlocked` | BOOLEAN | NOT NULL DEFAULT false | Unlocked status flag |
+| `unlocked_at` | TIMESTAMPTZ | NULL | Timestamp of unlock event |
+| `created_at` | TIMESTAMPTZ | NOT NULL DEFAULT now() | Creation timestamp |
+| `updated_at` | TIMESTAMPTZ | NOT NULL DEFAULT now() | Update timestamp |
+| *Constraint* | UNIQUE | `(character_id, achievement_id)` | Strictly guarantees one record per achievement per character (Idempotency) |
+
+### Stored Procedure: `public.evaluate_user_achievements(p_character_id UUID) -> JSONB`
+1. Verifies caller owns `p_character_id`.
+2. Gathers deterministic metrics across existing tables:
+   - `QUEST_COUNT`: Count of completed quests in `public.quests`.
+   - `STREAK_DAYS`: `current_streak` from `public.streaks`.
+   - `QUEST_CHAIN_COUNT`: Count of completed chains in `public.quest_chains`.
+   - `BOSS_COMPLETION_COUNT`: Count of defeated bosses in `public.boss_quests`.
+   - `PLAYER_LEVEL`: Current `level` from `public.characters`.
+   - `SKILL_COUNT`: Count of unlocked skills in `public.character_skills`.
+   - `GOLD_EARNED`: Total positive earnings ledger in `public.economy_transactions`.
+   - `ITEM_COUNT`: Count of unique purchases in `public.purchases`.
+   - `EQUIPPED_ITEM_COUNT`: Count of active slots in `public.character_equipment`.
+3. Iterates over active `public.achievements`:
+   - Clamps evaluated metric to `target`.
+   - Checks if `progress >= target`.
+   - UPSERTs into `public.user_achievements(character_id, achievement_id)`.
+   - If previously locked and now unlocked: sets `is_unlocked = true`, `unlocked_at = now()`, and appends to `newly_unlocked` array.
+4. Returns `{ success: true, evaluatedCount, newlyUnlocked }`.
+
+

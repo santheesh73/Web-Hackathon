@@ -113,4 +113,11 @@ Character Customization (/character & app-wide)
    - Equipping a new item automatically replaces the previous item in that slot without deleting or removing the old item from the user's inventory.
    - Unequipping clears the slot assignment while the item remains safely in inventory.
    - Equipment changes do not alter progression, XP, levels, attributes, or skill trees.
+10. **Server-Authoritative Achievements & Recognition Milestones**:
+   - Achievements serve strictly as an accolade and recognition layer. They do not introduce a second XP system, an alternate currency, or stat modifiers.
+   - All achievement metrics are derived deterministically from existing core progression tables (`QUEST_COUNT`, `STREAK_DAYS`, `QUEST_CHAIN_COUNT`, `BOSS_COMPLETION_COUNT`, `PLAYER_LEVEL`, `SKILL_COUNT`, `GOLD_EARNED`, `ITEM_COUNT`, `EQUIPPED_ITEM_COUNT`).
+   - Clients cannot forge progress or force unlocks. Unlocks are computed during authoritative events or via stored procedure.
+   - Unlock idempotency is strictly guaranteed by `UNIQUE(character_id, achievement_id)`. An unlocked achievement cannot be unlocked again.
+   - Real-time celebration toasts and notifications are dispatched synchronously when newly unlocked achievements are detected.
+
 

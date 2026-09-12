@@ -28,3 +28,6 @@ export * from './schemas/economy';
 export * from './types/inventory';
 export * from './constants/inventory';
 export * from './schemas/inventory';
+export * from './types/achievement';
+export * from './constants/achievements';
+export * from './schemas/achievement';

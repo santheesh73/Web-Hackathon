@@ -54,6 +54,7 @@ import {
   CHAIN_COMPLETION_GOLD,
 } from '../../../../src/shared/constants/economy';
 import { recordTransaction } from '../rewards/routes';
+import { evaluateUserAchievements } from '../achievements/routes';
 import { randomUUID } from 'crypto';
 
 const CompleteQuestBodySchema = z.object({
@@ -408,6 +409,9 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
       });
     }
 
+    // 10. Achievements Evaluation
+    const { newlyUnlocked } = evaluateUserAchievements(userId);
+
     const result: QuestCompletionResult & {
       streak: {
         currentStreak: number;
@@ -418,6 +422,7 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
       };
       chainProgress?: ChainProgressionResult | null;
       bossDefeat?: BossCompletionResult | null;
+      unlockedAchievements?: import('../../../../src/shared/types/achievement').Achievement[];
     } = {
       quest,
       xpAwarded,
@@ -441,6 +446,7 @@ export const progressionRoutes: FastifyPluginAsync = async (app: FastifyInstance
       unspentSkillPoints: character.skillPoints ?? currentSp,
       evolution,
       bossDefeat,
+      unlockedAchievements: newlyUnlocked,
     };
 
     return reply.status(200).send(result);

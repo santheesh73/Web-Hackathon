@@ -8,6 +8,7 @@ import {
   History,
   Store,
   Backpack,
+  Trophy,
   LucideIcon,
 } from 'lucide-react';
 
@@ -39,6 +40,7 @@ export const NAVIGATION_CONFIG: NavGroup[] = [
     items: [
       { name: 'Quest Chains', href: '/quests/chains', icon: Link },
       { name: 'Boss Quests', href: '/boss-quests', icon: Flame, badge: '1 Alert', badgeVariant: 'default' },
+      { name: 'Achievements', href: '/achievements', icon: Trophy },
       { name: 'History', href: '/history', icon: History },
     ],
   },

@@ -587,11 +587,90 @@
 - **Response (200 OK)**:
   ```json
   {
-    "AVATAR": { "id": "uuid", "name": "Cyber Samurai", ... },
-    "THEME": { "id": "uuid", "name": "Obsidian & Gold", ... },
-    "BADGE": { "id": "uuid", "name": "Master Strategist", ... },
-    "COSMETIC": { "id": "uuid", "name": "Aura of Focus", ... }
+    "AVATAR": { "id": "uuid", "name": "Cyber Samurai" },
+    "THEME": { "id": "uuid", "name": "Obsidian & Gold" },
+    "BADGE": { "id": "uuid", "name": "Master Strategist" },
+    "COSMETIC": { "id": "uuid", "name": "Aura of Focus" }
   }
   ```
+
+---
+
+## Phase 9: Achievements & Milestones Endpoints
+
+### List Achievements with Progress
+- **Method**: `GET`
+- **Path**: `/achievements`
+- **Headers**: `Authorization: Bearer <token>`
+- **Query Parameters**:
+  - `status`: `'ALL' | 'UNLOCKED' | 'IN_PROGRESS' | 'LOCKED'` (default: `'ALL'`)
+  - `category`: `'QUESTS' | 'STREAKS' | 'QUEST_CHAINS' | 'BOSS_QUESTS' | 'PROGRESSION' | 'SKILLS' | 'ECONOMY' | 'INVENTORY'`
+  - `search`: string (matches title, description, or category)
+  - `sortBy`: `'RECENT' | 'PROGRESS' | 'NAME'` (default: `'RECENT'`)
+- **Description**: Evaluates character progress deterministically and returns the list of achievements with computed progress percentages and unlock timestamps.
+- **Response (200 OK)**:
+  ```json
+  [
+    {
+      "id": "90000000-0000-4000-8000-000000000001",
+      "key": "FIRST_QUEST",
+      "name": "First Step Forward",
+      "description": "Complete your first real-life quest.",
+      "category": "QUESTS",
+      "icon": "CheckCircle2",
+      "requirementType": "QUEST_COUNT",
+      "target": 1,
+      "isActive": true,
+      "createdAt": "2026-09-12T00:00:00.000Z",
+      "progress": 1,
+      "isUnlocked": true,
+      "unlockedAt": "2026-09-12T17:27:35.000Z",
+      "progressPercent": 100
+    }
+  ]
+  ```
+
+### Get Achievement Detail
+- **Method**: `GET`
+- **Path**: `/achievements/:achievementId`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Retrieves single achievement with computed user progress by UUID or key.
+- **Response (200 OK)**:
+  ```json
+  {
+    "id": "90000000-0000-4000-8000-000000000001",
+    "key": "FIRST_QUEST",
+    "name": "First Step Forward",
+    "description": "Complete your first real-life quest.",
+    "category": "QUESTS",
+    "icon": "CheckCircle2",
+    "requirementType": "QUEST_COUNT",
+    "target": 1,
+    "isActive": true,
+    "createdAt": "2026-09-12T00:00:00.000Z",
+    "progress": 1,
+    "isUnlocked": true,
+    "unlockedAt": "2026-09-12T17:27:35.000Z",
+    "progressPercent": 100
+  }
+  ```
+- **Response (404 Not Found)**: If achievement does not exist.
+
+### Get Achievements Summary
+- **Method**: `GET`
+- **Path**: `/achievements/summary`
+- **Headers**: `Authorization: Bearer <token>`
+- **Description**: Returns high-level milestone completion statistics for dashboard widgets and badge headers.
+- **Response (200 OK)**:
+  ```json
+  {
+    "total": 14,
+    "unlockedCount": 3,
+    "inProgressCount": 4,
+    "lockedCount": 7,
+    "completionPercent": 21
+  }
+  ```
+
 
 

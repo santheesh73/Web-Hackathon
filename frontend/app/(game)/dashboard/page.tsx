@@ -19,6 +19,7 @@ import {
   PlusCircle,
   ArrowRight,
   Layers,
+  Backpack,
 } from 'lucide-react';
 import { useAuth } from '@/hooks/use-auth';
 import { useCharacter } from '@/hooks/use-character';
@@ -46,6 +47,7 @@ import { EvolutionBadge } from '@/components/character/evolution-badge';
 import { useBossQuests } from '@/features/boss-quests/use-boss-quests';
 import { BossCard } from '@/components/boss/boss-card';
 import { CurrencyDisplay } from '@/components/economy/currency-display';
+import { AchievementSummary } from '@/components/achievements/achievement-summary';
 
 const AVATAR_ICONS: Record<string, LucideIcon> = {
   Shield,
@@ -397,10 +399,15 @@ export default function DashboardPage() {
           )}
         </div>
 
-        {/* 8. Marketplace & Future Expansion Modules */}
+        {/* 8. Achievements & Milestones Recognition */}
+        <div>
+          <AchievementSummary />
+        </div>
+
+        {/* 9. Economy & Equipment Modules */}
         <div>
           <h3 className="text-lg font-bold tracking-tight text-foreground mb-4">
-            Economy & Expansion Modules
+            Economy & Equipment Modules
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {/* Rewards & Shop (Live Phase 7) */}
@@ -419,6 +426,27 @@ export default function DashboardPage() {
                   </CardTitle>
                   <CardDescription className="text-xs">
                     Spend your earned Gold on avatar archetypes, themes, achievement badges, and cosmetic flair.
+                  </CardDescription>
+                </CardHeader>
+              </Card>
+            </Link>
+
+            {/* Inventory & Equipment (Live Phase 8) */}
+            <Link href="/inventory" className="block">
+              <Card variant="interactive" className="border-emerald-500/30 hover:border-emerald-500/60 transition-all">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <Backpack className="h-5 w-5 text-emerald-500" />
+                    <Badge variant="rpg" size="sm">
+                      Phase 8 Live
+                    </Badge>
+                  </div>
+                  <CardTitle className="text-base mt-2 flex items-center justify-between">
+                    <span>Inventory & Equipment</span>
+                    <ArrowRight className="h-4 w-4 text-emerald-500" />
+                  </CardTitle>
+                  <CardDescription className="text-xs">
+                    Inspect acquired items, configure 5 equipment slots, and preview cosmetic flair.
                   </CardDescription>
                 </CardHeader>
               </Card>

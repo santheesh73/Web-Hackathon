@@ -25,6 +25,9 @@ export const API_ROUTES = {
   INVENTORY_EQUIP: '/inventory/:itemId/equip',
   INVENTORY_UNEQUIP: '/inventory/:itemId/unequip',
   CHARACTER_EQUIPMENT: '/character/equipment',
+  ACHIEVEMENTS: '/achievements',
+  ACHIEVEMENT_DETAIL: '/achievements/:achievementId',
+  ACHIEVEMENTS_SUMMARY: '/achievements/summary',
 } as const;
 
 export const DEFAULT_PORTS = {
