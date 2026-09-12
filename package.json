@@ -1,0 +1,23 @@
+{
+  "name": "life-rpg",
+  "version": "0.1.0",
+  "private": true,
+  "description": "LIFE RPG - Real-life productivity gamification platform",
+  "workspaces": [
+    "frontend",
+    "backend"
+  ],
+  "scripts": {
+    "dev": "concurrently -k -n \"backend,frontend\" -c \"blue,green\" \"npm run dev --workspace=backend\" \"npm run dev --workspace=frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspaces",
+    "lint": "npm run lint --workspaces",
+    "test": "npm run test --workspace=backend",
+    "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "prettier": "^3.5.2"
+  }
+}

@@ -1,0 +1,3 @@
+-- LIFE RPG Seed Data
+-- Phase 0: Prepared for future migrations and seed data.
+-- No speculative tables or data in Phase 0.
