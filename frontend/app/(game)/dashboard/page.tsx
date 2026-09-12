@@ -333,7 +333,7 @@ export default function DashboardPage() {
               Character & Capability Progression
             </h3>
             <span className="text-xs text-muted-foreground font-mono">
-              Phase 5 Active
+              Attributes & Mastery
             </span>
           </div>
 
@@ -435,14 +435,14 @@ export default function DashboardPage() {
             Economy & Equipment Modules
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Rewards & Shop (Live Phase 7) */}
+            {/* Rewards & Shop */}
             <Link href="/shop" className="block">
               <Card variant="interactive" className="border-amber-500/30 hover:border-amber-500/60 transition-all">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <Store className="h-5 w-5 text-amber-500" />
                     <Badge variant="rpg" size="sm">
-                      Phase 7 Live
+                      Active Catalog
                     </Badge>
                   </div>
                   <CardTitle className="text-base mt-2 flex items-center justify-between">
@@ -456,14 +456,14 @@ export default function DashboardPage() {
               </Card>
             </Link>
 
-            {/* Inventory & Equipment (Live Phase 8) */}
+            {/* Inventory & Equipment */}
             <Link href="/inventory" className="block">
               <Card variant="interactive" className="border-emerald-500/30 hover:border-emerald-500/60 transition-all">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <Backpack className="h-5 w-5 text-emerald-500" />
                     <Badge variant="rpg" size="sm">
-                      Phase 8 Live
+                      Customization Active
                     </Badge>
                   </div>
                   <CardTitle className="text-base mt-2 flex items-center justify-between">
@@ -471,7 +471,7 @@ export default function DashboardPage() {
                     <ArrowRight className="h-4 w-4 text-emerald-500" />
                   </CardTitle>
                   <CardDescription className="text-xs">
-                    Inspect acquired items, configure 5 equipment slots, and preview cosmetic flair.
+                    Inspect acquired items, configure equipment slots, and preview cosmetic flair.
                   </CardDescription>
                 </CardHeader>
               </Card>

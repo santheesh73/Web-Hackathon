@@ -68,7 +68,7 @@ export default function SkillTreePage() {
             </div>
             <h1 className="text-2xl font-bold tracking-tight text-foreground">Skill Tree</h1>
             <Badge variant="neutral" size="sm" className="font-mono text-xs">
-              Phase 5
+              Mastery System
             </Badge>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">

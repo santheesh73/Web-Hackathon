@@ -1,4 +1,4 @@
-﻿import * as React from 'react';
+import * as React from 'react';
 import Link from 'next/link';
 import { Shield } from 'lucide-react';
 
@@ -29,7 +29,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
 
       {/* Footer */}
       <footer className="text-center text-xs text-muted-foreground">
-        <p>LIFE RPG &bull; Phase 2 Authentication & Onboarding</p>
+        <p>LIFE RPG &bull; Gamified Productivity Platform</p>
       </footer>
     </div>
   );

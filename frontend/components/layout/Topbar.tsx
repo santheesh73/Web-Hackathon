@@ -5,7 +5,6 @@ import { useRouter } from 'next/navigation';
 import { Menu, Plus, Flame, Coins, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
-import { Dialog } from '@/components/ui/dialog';
 import { getHealthStatus } from '@/lib/api';
 import { useAuth } from '@/hooks/use-auth';
 import { useCharacter } from '@/hooks/use-character';
@@ -23,7 +22,6 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }:
   const { signOut } = useAuth();
   const { character } = useCharacter();
   const [apiConnected, setApiConnected] = React.useState<boolean | null>(null);
-  const [isNewQuestOpen, setIsNewQuestOpen] = React.useState(false);
 
   React.useEffect(() => {
     getHealthStatus()
@@ -93,14 +91,15 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }:
 
 
           {/* Quick Action Button */}
-          <Button
-            size="sm"
-            variant="outline"
-            icon={<Plus className="h-4 w-4" />}
-            onClick={() => setIsNewQuestOpen(true)}
-          >
-            <span className="hidden sm:inline">New Quest</span>
-          </Button>
+          <Link href="/quests/create">
+            <Button
+              size="sm"
+              variant="outline"
+              icon={<Plus className="h-4 w-4" />}
+            >
+              <span className="hidden sm:inline">New Quest</span>
+            </Button>
+          </Link>
 
           {/* Sign Out Action */}
           <Tooltip content="Sign Out">
@@ -114,25 +113,6 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }:
           </Tooltip>
         </div>
       </header>
-
-      {/* Demonstration Dialog for Quick Action */}
-      <Dialog
-        open={isNewQuestOpen}
-        onOpenChange={setIsNewQuestOpen}
-        title="Quests Coming Soon"
-        description="Phase 2 Foundation: Real quest creation and management will be introduced in subsequent phases."
-      >
-        <div className="space-y-4">
-          <div className="p-4 rounded-lg bg-surface-muted border border-border text-xs text-muted-foreground">
-            Quests will be fully functional once the gameplay engine is added in Phase 3.
-          </div>
-          <div className="flex justify-end gap-2">
-            <Button variant="outline" size="sm" onClick={() => setIsNewQuestOpen(false)}>
-              Close
-            </Button>
-          </div>
-        </div>
-      </Dialog>
     </>
   );
 }

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import Link from 'next/link';
@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { X, Shield } from 'lucide-react';
 import { NAVIGATION_CONFIG } from '@/lib/navigation';
 import { Badge } from '@/components/ui/badge';
+import { useCharacter } from '@/hooks/use-character';
 import { cn } from '@/lib/utils';
 
 export interface MobileNavProps {
@@ -16,6 +17,7 @@ export interface MobileNavProps {
 
 export function MobileNav({ open, onClose }: MobileNavProps) {
   const pathname = usePathname();
+  const { character } = useCharacter();
 
   // Close on Escape
   React.useEffect(() => {
@@ -126,10 +128,10 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
 
             {/* Profile footer */}
             <div className="pt-3 border-t border-border/70 text-xs text-muted-foreground">
-              <div className="flex items-center justify-between">
-                <span>Character: Adventurer</span>
-                <span className="font-bold text-amber-600">Level 7</span>
-              </div>
+              <Link href="/character" onClick={onClose} className="flex items-center justify-between hover:text-foreground transition-colors">
+                <span className="truncate max-w-[140px]">Character: {character?.name || 'Adventurer'}</span>
+                <span className="font-bold text-amber-600 dark:text-amber-400">Level {character?.level ?? 1}</span>
+              </Link>
             </div>
           </motion.div>
         </div>
