@@ -1,18 +1,23 @@
 ﻿'use client';
 
 import * as React from 'react';
-import { Menu, Plus, Flame, Coins, ShieldCheck, WifiOff } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Menu, Plus, Flame, Coins, LogOut } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tooltip } from '@/components/ui/tooltip';
 import { Dialog } from '@/components/ui/dialog';
 import { getHealthStatus } from '@/lib/api';
+import { useAuth } from '@/hooks/use-auth';
 
 export interface TopbarProps {
   onMobileMenuOpen: () => void;
   title?: string;
+  characterName?: string;
 }
 
-export function Topbar({ onMobileMenuOpen, title = 'Dashboard' }: TopbarProps) {
+export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }: TopbarProps) {
+  const router = useRouter();
+  const { signOut } = useAuth();
   const [apiConnected, setApiConnected] = React.useState<boolean | null>(null);
   const [isNewQuestOpen, setIsNewQuestOpen] = React.useState(false);
 
@@ -26,10 +31,15 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard' }: TopbarProps) {
       });
   }, []);
 
+  const handleSignOut = async () => {
+    await signOut();
+    router.push('/login');
+  };
+
   return (
     <>
       <header className="h-16 border-b border-border/80 bg-surface/90 backdrop-blur sticky top-0 z-30 flex items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Left Side: Mobile Menu Button & Page Title */}
+        {/* Left: Mobile Menu Button & Page Title */}
         <div className="flex items-center gap-3">
           <button
             onClick={onMobileMenuOpen}
@@ -45,7 +55,7 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard' }: TopbarProps) {
           </div>
         </div>
 
-        {/* Right Side: Quick Stats & Actions */}
+        {/* Right: Status Indicators & Quick Actions */}
         <div className="flex items-center gap-2 sm:gap-3">
           {/* API Health Connection Indicator */}
           <Tooltip
@@ -73,30 +83,33 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard' }: TopbarProps) {
           </Tooltip>
 
           {/* Streak Indicator (Visual Preview) */}
-          <Tooltip content="14-Day Streak (Active)">
+          <Tooltip content="Streak Indicator (Phase 3 Gameplay)">
             <div className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-xs font-semibold cursor-default">
               <Flame className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
-              <span>14</span>
+              <span>0</span>
             </div>
           </Tooltip>
 
-          {/* Gold / Currency Preview */}
-          <Tooltip content="450 Gold Coins">
-            <div className="hidden md:flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold cursor-default">
-              <Coins className="h-3.5 w-3.5 text-amber-500" />
-              <span>450</span>
-            </div>
-          </Tooltip>
-
-          {/* Quick Action Button Foundation */}
+          {/* Quick Action Button */}
           <Button
             size="sm"
-            variant="primary"
+            variant="outline"
             icon={<Plus className="h-4 w-4" />}
             onClick={() => setIsNewQuestOpen(true)}
           >
             <span className="hidden sm:inline">New Quest</span>
           </Button>
+
+          {/* Sign Out Action */}
+          <Tooltip content="Sign Out">
+            <button
+              onClick={handleSignOut}
+              className="p-2 rounded-lg text-muted-foreground hover:bg-rose-50 hover:text-rose-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Sign Out"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
+          </Tooltip>
         </div>
       </header>
 
@@ -104,13 +117,12 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard' }: TopbarProps) {
       <Dialog
         open={isNewQuestOpen}
         onOpenChange={setIsNewQuestOpen}
-        title="Create New Quest"
-        description="Phase 1 Foundation: Quest creation forms will be wired to the backend API in future phases."
+        title="Quests Coming Soon"
+        description="Phase 2 Foundation: Real quest creation and management will be introduced in subsequent phases."
       >
         <div className="space-y-4">
           <div className="p-4 rounded-lg bg-surface-muted border border-border text-xs text-muted-foreground">
-            Quest title, XP rewards, difficulty tags, and attribute links will be implemented in
-            subsequent phases.
+            Quests will be fully functional once the gameplay engine is added in Phase 3.
           </div>
           <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" onClick={() => setIsNewQuestOpen(false)}>

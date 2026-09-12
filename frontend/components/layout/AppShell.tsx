@@ -8,15 +8,16 @@ import { MobileNav } from './MobileNav';
 export interface AppShellProps {
   children: React.ReactNode;
   pageTitle?: string;
+  characterName?: string;
 }
 
-export function AppShell({ children, pageTitle = 'Dashboard' }: AppShellProps) {
+export function AppShell({ children, pageTitle = 'Dashboard', characterName }: AppShellProps) {
   const [mobileNavOpen, setMobileNavOpen] = React.useState(false);
 
   return (
     <div className="min-h-screen bg-background flex flex-row antialiased text-foreground">
       {/* Desktop Persistent Sidebar */}
-      <Sidebar />
+      <Sidebar characterName={characterName} />
 
       {/* Mobile Drawer Navigation */}
       <MobileNav open={mobileNavOpen} onClose={() => setMobileNavOpen(false)} />
@@ -26,6 +27,7 @@ export function AppShell({ children, pageTitle = 'Dashboard' }: AppShellProps) {
         <Topbar
           onMobileMenuOpen={() => setMobileNavOpen(true)}
           title={pageTitle}
+          characterName={characterName}
         />
         <main className="flex-1 overflow-y-auto">
           {children}

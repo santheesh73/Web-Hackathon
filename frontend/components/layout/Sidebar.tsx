@@ -8,7 +8,11 @@ import { NAVIGATION_CONFIG } from '@/lib/navigation';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
-export function Sidebar() {
+export interface SidebarProps {
+  characterName?: string;
+}
+
+export function Sidebar({ characterName = 'Adventurer' }: SidebarProps) {
   const pathname = usePathname();
 
   return (
@@ -29,7 +33,7 @@ export function Sidebar() {
           </div>
         </Link>
         <Badge variant="rpg" size="sm">
-          Phase 1
+          Phase 2
         </Badge>
       </div>
 
@@ -87,28 +91,25 @@ export function Sidebar() {
         ))}
       </div>
 
-      {/* Character / Profile Foundation (Static Visual Preview) */}
+      {/* Character Profile Foundation (Active Character Summary) */}
       <div className="p-4 border-t border-border/70 bg-surface-muted/50">
-        <div className="flex items-center gap-3 p-2 rounded-xl border border-border bg-surface shadow-subtle">
+        <div className="flex items-center gap-3 p-2.5 rounded-xl border border-border bg-surface shadow-subtle">
           <div className="relative">
             <div className="h-10 w-10 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center text-indigo-700 font-bold text-sm">
-              LV
+              {characterName ? characterName.charAt(0).toUpperCase() : 'A'}
             </div>
             <span className="absolute -bottom-1 -right-1 bg-amber-500 text-[9px] font-bold text-white px-1 py-0.2 rounded-full border border-white">
-              7
+              1
             </span>
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-1">
-              <p className="text-xs font-semibold text-foreground truncate">Adventurer</p>
+              <p className="text-xs font-semibold text-foreground truncate">{characterName}</p>
               <Sparkles className="h-3 w-3 text-amber-500 shrink-0" />
             </div>
             <div className="flex items-center justify-between mt-1 text-[10px] text-muted-foreground">
-              <span>XP 680 / 1000</span>
-              <span className="font-semibold text-amber-600">68%</span>
-            </div>
-            <div className="w-full bg-slate-100 h-1.5 rounded-full mt-1 overflow-hidden">
-              <div className="bg-gradient-to-r from-amber-500 to-amber-600 h-full w-[68%] rounded-full" />
+              <span>Novice Adventurer</span>
+              <span className="font-semibold text-amber-600">Level 1</span>
             </div>
           </div>
         </div>

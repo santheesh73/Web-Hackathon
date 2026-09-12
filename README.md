@@ -1,29 +1,29 @@
-# LIFE RPG
+﻿# LIFE RPG
 
 A full-stack web application that transforms real-life productivity into an RPG-style progression experience.
 
 ## Project Status
-Phase 0 — Foundation
+**Phase 2 — Authentication & Character Creation Complete**
 
 ## Architecture
 
 The system follows a modular full-stack architecture:
 
 ```
-Frontend (Next.js App Router)
+Frontend (Next.js 15 App Router)
     ↓
 Backend API (Fastify + Zod)
     ↓
-Database (Supabase PostgreSQL)
+Database & Auth (Supabase PostgreSQL + RLS)
 ```
 
-Shared TypeScript contracts are maintained under `src/shared/` to provide end-to-end type safety between frontend and backend without duplicating models. Authoritative game logic resides exclusively on the backend.
+Shared TypeScript contracts are maintained under `src/shared/` to provide end-to-end type safety between frontend and backend without duplicating models.
 
 ## Tech Stack
 
-- **Frontend**: Next.js, React, TypeScript, Tailwind CSS, ESLint
+- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS, Framer Motion, Lucide React, React Hook Form, Zod
 - **Backend**: Fastify, Node.js, TypeScript, Zod
-- **Database**: Supabase PostgreSQL
+- **Database & Auth**: Supabase PostgreSQL with Row Level Security (RLS)
 - **Shared**: TypeScript contracts (`src/shared`)
 - **Testing**: Vitest
 
@@ -57,16 +57,21 @@ npm run dev:backend
 ```bash
 npm run dev:frontend
 # Frontend application runs at http://localhost:3000
+# Landing page: http://localhost:3000/
+# Login: http://localhost:3000/login
+# Signup: http://localhost:3000/signup
+# Character Creation: http://localhost:3000/character-creation
+# Dashboard: http://localhost:3000/dashboard
 ```
 
 ### Running Tests & Quality Checks
 ```bash
-# Run backend tests
+# Run backend unit and integration tests
 npm run test
 
-# Run linter
+# Run linter across all workspaces
 npm run lint
 
-# Format codebase
-npm run format
+# Compile and build all workspaces
+npm run build
 ```

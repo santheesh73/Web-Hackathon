@@ -1,7 +1,8 @@
-import Fastify, { FastifyInstance } from 'fastify';
+﻿import Fastify, { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import { HealthResponseSchema } from '../../src/shared/schemas/health';
 import { API_ROUTES } from '../../src/shared/constants/api';
+import { characterRoutes } from './modules/character/routes';
 
 export function buildApp(): FastifyInstance {
   const app = Fastify({
@@ -13,6 +14,7 @@ export function buildApp(): FastifyInstance {
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   });
 
+  // Health endpoint
   app.get(API_ROUTES.HEALTH, async (_request, reply) => {
     const healthData = {
       status: 'ok' as const,
@@ -22,6 +24,9 @@ export function buildApp(): FastifyInstance {
     const validated = HealthResponseSchema.parse(healthData);
     return reply.status(200).send(validated);
   });
+
+  // Register Character Module
+  app.register(characterRoutes);
 
   return app;
 }
