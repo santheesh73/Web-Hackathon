@@ -23,6 +23,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { cn } from '@/lib/utils';
 
 export type HistoryEventType = 'ALL' | 'QUESTS' | 'ACHIEVEMENTS' | 'PURCHASES' | 'BOSSES';
@@ -161,7 +162,8 @@ export default function HistoryPage() {
     .reduce((sum, t) => sum + t.amount, 0);
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pb-12">
+    <PageContainer>
+      <div className="space-y-8">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-border/60">
         <div className="space-y-1">
@@ -360,6 +362,7 @@ export default function HistoryPage() {
           })}
         </div>
       )}
-    </div>
+      </div>
+    </PageContainer>
   );
 }

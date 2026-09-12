@@ -10,6 +10,7 @@ import { SkillUnlockModal } from '@/components/skill-tree/skill-unlock-modal';
 import { EvolutionModal } from '@/components/character/evolution-modal';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
+import { PageContainer } from '@/components/layout/PageContainer';
 import type { AttributeKey } from '@/../src/shared/types/attribute';
 import type { SkillNodeWithState } from '@/../src/shared/types/skill';
 
@@ -58,7 +59,8 @@ export default function SkillTreePage() {
   }, [treeData, selectedBranch]);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+    <PageContainer>
+      <div className="space-y-6">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-border/80 pb-5">
         <div>
@@ -167,6 +169,7 @@ export default function SkillTreePage() {
         title={evolutionCelebration.title}
         tierName={evolutionCelebration.tierName}
       />
-    </div>
+      </div>
+    </PageContainer>
   );
 }

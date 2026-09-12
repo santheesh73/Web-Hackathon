@@ -24,8 +24,8 @@ export function Sidebar({ characterName = 'Adventurer' }: SidebarProps) {
   return (
     <aside className="hidden lg:flex w-64 flex-col border-r border-border bg-surface shrink-0 h-screen sticky top-0 select-none">
       {/* Brand Header */}
-      <div className="h-16 flex items-center justify-between px-6 border-b border-border/70">
-        <Link href="/" className="flex items-center gap-2.5 group">
+      <div className="h-16 flex items-center px-6 border-b border-border/70">
+        <Link href="/dashboard" className="flex items-center gap-2.5 group">
           <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
             <Shield className="h-5 w-5" />
           </div>
@@ -34,13 +34,10 @@ export function Sidebar({ characterName = 'Adventurer' }: SidebarProps) {
               LIFE RPG
             </span>
             <span className="text-[10px] font-semibold text-muted-foreground tracking-wider uppercase">
-              Productivity
+              Productivity RPG
             </span>
           </div>
         </Link>
-        <Badge variant="rpg" size="sm">
-          HACKATHON BUILD
-        </Badge>
       </div>
 
       {/* Navigation Links */}

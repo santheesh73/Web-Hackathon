@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BossCard } from '@/components/boss/boss-card';
 import { BossProgress } from '@/components/boss/boss-progress';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { useBossQuests } from '@/features/boss-quests/use-boss-quests';
 
 export default function BossQuestsPage() {
@@ -20,7 +21,8 @@ export default function BossQuestsPage() {
   const displayedBosses = tab === 'ACTIVE' ? activeBosses : completedBosses;
 
   return (
-    <div className="space-y-6 pb-12">
+    <PageContainer>
+      <div className="space-y-6">
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-border pb-5">
         <div className="space-y-1">
@@ -183,6 +185,7 @@ export default function BossQuestsPage() {
           )}
         </>
       )}
-    </div>
+      </div>
+    </PageContainer>
   );
 }

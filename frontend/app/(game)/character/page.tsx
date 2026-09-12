@@ -21,6 +21,7 @@ import { useCharacter } from '@/hooks/use-character';
 import { useAttributes } from '@/features/attributes/use-attributes';
 import { useSkillTree } from '@/features/skill-tree/use-skill-tree';
 import { useInventory } from '@/features/inventory/use-inventory';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { AttributeRadar } from '@/components/character/attribute-radar';
 import { AttributeCard } from '@/components/character/attribute-card';
 import { EvolutionBadge } from '@/components/character/evolution-badge';
@@ -63,7 +64,8 @@ export default function CharacterPage() {
   }, [treeData]);
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-12">
+    <PageContainer>
+      <div className="space-y-6">
       {/* Character Header Banner */}
       <div className="p-6 rounded-2xl border border-border bg-gradient-to-r from-card via-muted/30 to-card shadow-sm">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -306,6 +308,7 @@ export default function CharacterPage() {
           )}
         </CardContent>
       </Card>
-    </div>
+      </div>
+    </PageContainer>
   );
 }

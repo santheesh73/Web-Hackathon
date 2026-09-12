@@ -15,6 +15,7 @@ import { AchievementGrid } from '@/components/achievements/achievement-grid';
 import { AchievementDetailModal } from '@/components/achievements/achievement-detail-modal';
 import { AchievementCelebration } from '@/components/feedback/achievement-celebration';
 import { Button } from '@/components/ui/button';
+import { PageContainer } from '@/components/layout/PageContainer';
 import type { AchievementWithProgress } from '@/../src/shared/types/achievement';
 
 export default function AchievementsPage() {
@@ -60,7 +61,8 @@ export default function AchievementsPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-12">
+    <PageContainer>
+      <div className="space-y-8">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-border/60">
         <div className="space-y-1">
@@ -201,6 +203,7 @@ export default function AchievementsPage() {
           onDismiss={() => setActiveCelebration(null)}
         />
       )}
-    </div>
+      </div>
+    </PageContainer>
   );
 }

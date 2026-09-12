@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Layers, PlusCircle, ArrowLeft, CheckCircle2, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { QuestChainCard } from '@/components/quests/quest-chain-card';
 import { useQuestChains } from '@/features/quest-chains/use-quest-chains';
 
@@ -22,7 +23,8 @@ export default function QuestChainsPage() {
   const completedCount = chains.filter((c) => c.status === 'COMPLETED').length;
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto py-6 px-4 sm:px-6">
+    <PageContainer>
+      <div className="space-y-8">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1">
@@ -122,6 +124,7 @@ export default function QuestChainsPage() {
           ))}
         </div>
       )}
-    </div>
+      </div>
+    </PageContainer>
   );
 }

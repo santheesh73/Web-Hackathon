@@ -20,6 +20,7 @@ import { PurchaseModal } from '@/components/economy/purchase-modal';
 import { TransactionHistory } from '@/components/economy/transaction-history';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { PageContainer } from '@/components/layout/PageContainer';
 import { cn } from '@/lib/utils';
 import type { ShopItemWithOwnership } from '@/../src/shared/types/economy';
 import { CURRENCY_SYMBOL } from '@/../src/shared/constants/economy';
@@ -63,7 +64,8 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-8 pb-12">
+    <PageContainer>
+      <div className="space-y-8">
       {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-border/60">
         <div className="space-y-1">
@@ -241,6 +243,7 @@ export default function ShopPage() {
         characterGold={character?.gold ?? 0}
         onConfirm={handleConfirmPurchase}
       />
-    </div>
+      </div>
+    </PageContainer>
   );
 }
