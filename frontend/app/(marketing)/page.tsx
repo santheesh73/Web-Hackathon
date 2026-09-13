@@ -95,32 +95,32 @@ export default function MarketingPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary/20">
       {/* Top Navbar */}
       <header className="border-b border-border/80 bg-surface/80 backdrop-blur sticky top-0 z-40">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center text-white shadow-sm">
-              <Shield className="h-4.5 w-4.5" />
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center text-white shadow-sm">
+              <Shield className="h-5 w-5" />
             </div>
             <div>
-              <span className="font-bold text-sm tracking-tight text-foreground block leading-tight">
+              <span className="font-bold text-base tracking-tight text-foreground block leading-tight">
                 LIFE RPG
               </span>
-              <span className="text-[9px] font-semibold text-muted-foreground uppercase tracking-wider">
+              <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
                 Productivity System
               </span>
             </div>
           </Link>
 
-          <nav className="flex items-center gap-2 sm:gap-3">
+          <nav className="flex items-center gap-3 sm:gap-4">
             <ThemeSelector />
             <Link
               href="/login"
-              className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors px-2 sm:px-3 py-1.5"
+              className="text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors px-2 py-1.5"
             >
               Sign In
             </Link>
             <Link href="/signup">
-              <Button size="sm" variant="rpg" className="text-xs gap-1.5 shadow-sm h-8 px-3">
-                <span>Start</span>
+              <Button size="sm" variant="rpg" className="text-xs font-semibold gap-1.5 shadow-sm h-9 px-4 rounded-xl">
+                <span>Start Your Journey</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Button>
             </Link>
@@ -131,45 +131,44 @@ export default function MarketingPage() {
       {/* Main Content */}
       <main className="flex-1">
         {/* HERO SECTION */}
-        <section className="py-14 sm:py-20 px-4 sm:px-6 border-b border-border/60 bg-gradient-to-b from-surface to-background relative overflow-hidden">
+        <section className="py-20 sm:py-28 px-4 sm:px-6 border-b border-border/60 bg-gradient-to-b from-surface via-background to-background relative overflow-hidden flex flex-col items-center justify-center">
           {/* Ambient Glows */}
-          <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[680px] h-[320px] bg-gradient-to-tr from-indigo-500/15 via-purple-500/15 to-amber-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
 
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={smoothTransition}
-            className="max-w-4xl mx-auto text-center space-y-5 relative z-10"
+            className="max-w-4xl mx-auto text-center space-y-6 relative z-10"
           >
             {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-primary/20 bg-primary/5 text-primary text-xs font-semibold shadow-xs">
+            <div className="inline-flex items-center gap-2 px-4 py-1.2 rounded-full border border-indigo-200 dark:border-indigo-800/80 bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-medium shadow-xs">
               <Sparkles className="h-3.5 w-3.5" />
               <span>Real-Life Productivity Reimagined</span>
             </div>
 
-            {/* Headline */}
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground max-w-3xl mx-auto leading-[1.15]">
-              What if your real life had an{' '}
-              <span className="bg-gradient-to-r from-indigo-500 via-purple-500 to-amber-500 bg-clip-text text-transparent">
-                RPG progression system?
-              </span>
+            {/* Headline matching reference screenshot exactly */}
+            <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-foreground max-w-4xl mx-auto leading-[1.12]">
+              What if your real life had<br />
+              an <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">RPG progression</span><br />
+              <span className="text-amber-500 font-black">system?</span>
             </h1>
 
             {/* Supporting text */}
-            <p className="text-sm sm:text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
+            <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
               Transform everyday tasks, habits, and monumental goals into quests. Earn experience, build unbroken streaks, advance skill trees, vanquish bosses, and forge your personal legend.
             </p>
 
             {/* CTAs */}
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
               <Link href="/signup">
-                <Button size="lg" variant="rpg" className="gap-2 text-xs sm:text-sm shadow-md h-10 px-5 sm:h-11 sm:px-6">
+                <Button size="lg" variant="rpg" className="gap-2 text-sm font-semibold shadow-md h-11 px-7 rounded-xl">
                   <span>Start Your Journey</span>
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
               <Link href="/login">
-                <Button size="lg" variant="outline" className="text-xs sm:text-sm h-10 px-5 sm:h-11 sm:px-6 border-border/70 hover:bg-card">
+                <Button size="lg" variant="outline" className="text-sm font-semibold h-11 px-7 rounded-xl border-border bg-surface hover:bg-surface-muted shadow-xs">
                   <span>Sign In & Resume</span>
                 </Button>
               </Link>
