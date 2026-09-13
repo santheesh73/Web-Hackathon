@@ -20,11 +20,11 @@ export function XPBar({ xp = 0, className, showDetails = true }: XPBarProps) {
       {showDetails && (
         <div className="flex items-center justify-between text-xs font-semibold">
           <div className="flex items-center gap-1.5 text-foreground">
-            <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+            <Sparkles className="h-3.5 w-3.5 text-red-500" />
             <span>Level {progress.currentLevel}</span>
           </div>
           <div className="text-muted-foreground">
-            <span className="font-bold text-amber-600">{xp}</span>
+            <span className="font-bold text-red-600 dark:text-red-400">{xp}</span>
             <span className="text-[11px]"> / {progress.nextLevelXp} XP</span>
             <span className="ml-1.5 font-bold text-foreground">({progress.progressPercent}%)</span>
           </div>
@@ -44,7 +44,7 @@ export function XPBar({ xp = 0, className, showDetails = true }: XPBarProps) {
           initial={{ width: 0 }}
           animate={{ width: `${progress.progressPercent}%` }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="h-full rounded-full bg-gradient-to-r from-amber-500 to-amber-600 shadow-sm"
+          className="h-full rounded-full bg-gradient-to-r from-red-600 to-rose-500 shadow-sm"
         />
       </div>
 

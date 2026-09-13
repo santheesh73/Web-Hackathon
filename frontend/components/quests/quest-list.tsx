@@ -150,7 +150,7 @@ export function QuestList() {
         </div>
       ) : displayedQuests.length === 0 ? (
         <div className="p-12 text-center rounded-2xl border border-dashed border-border bg-surface-muted/40 space-y-4">
-          <div className="mx-auto h-12 w-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200">
+          <div className="mx-auto h-12 w-12 rounded-xl bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400 flex items-center justify-center border border-red-200 dark:border-red-800">
             <Swords className="h-6 w-6" />
           </div>
           <div>

@@ -31,8 +31,8 @@ export default function MarketingPage() {
       icon: Swords,
       title: 'Quests & Tasks',
       description: 'Convert real-world tasks, workouts, and study routines into quests with server-awarded XP.',
-      color: 'text-indigo-500',
-      bgColor: 'bg-indigo-500/10 border-indigo-500/20',
+      color: 'text-red-500',
+      bgColor: 'bg-red-500/10 border-red-500/20',
     },
     {
       icon: Sparkles,
@@ -98,7 +98,7 @@ export default function MarketingPage() {
       <header className="border-b border-border/80 bg-surface/80 backdrop-blur sticky top-0 z-40">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center text-white shadow-sm">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center text-white shadow-sm">
               <Shield className="h-5 w-5" />
             </div>
             <div>
@@ -134,8 +134,8 @@ export default function MarketingPage() {
         {/* HERO SECTION */}
         <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 border-b border-border/60 bg-gradient-to-b from-surface via-background to-background relative overflow-hidden">
           {/* Ambient Glows */}
-          <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-primary/15 rounded-full blur-3xl pointer-events-none -z-10" />
-          <div className="absolute top-1/2 right-10 -translate-y-1/2 w-[500px] h-[400px] bg-indigo-500/15 dark:bg-indigo-500/25 rounded-full blur-3xl pointer-events-none -z-10" />
+          <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-red-500/15 rounded-full blur-3xl pointer-events-none -z-10" />
+          <div className="absolute top-1/2 right-10 -translate-y-1/2 w-[500px] h-[400px] bg-rose-500/15 dark:bg-rose-500/25 rounded-full blur-3xl pointer-events-none -z-10" />
 
           <div className="max-w-7xl mx-auto">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
@@ -148,7 +148,7 @@ export default function MarketingPage() {
               >
                 {/* Eyebrow */}
                 <div>
-                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800/80 bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-medium shadow-xs">
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-red-200 dark:border-red-800/80 bg-red-50/70 dark:bg-red-950/40 text-red-600 dark:text-red-400 text-xs font-medium shadow-xs">
                     <Sparkles className="h-3.5 w-3.5" />
                     <span>Real-Life Productivity Reimagined</span>
                   </div>
@@ -157,8 +157,8 @@ export default function MarketingPage() {
                 {/* Headline */}
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-foreground leading-[1.12]">
                   What if your real life had<br className="hidden sm:inline" />
-                  {' '}an <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">RPG progression</span><br />
-                  <span className="text-amber-500 font-black">system?</span>
+                  {' '}an <span className="bg-gradient-to-r from-red-600 via-rose-600 to-amber-500 bg-clip-text text-transparent">RPG progression</span><br />
+                  <span className="text-red-500 font-black">system?</span>
                 </h1>
 
                 {/* Supporting description */}
@@ -196,10 +196,10 @@ export default function MarketingPage() {
                   className="relative w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[440px] aspect-square flex items-center justify-center"
                 >
                   {/* Outer Ambient Glow Ring */}
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-indigo-500/25 via-purple-500/20 to-amber-500/20 blur-2xl -z-10" />
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-red-500/25 via-rose-500/20 to-amber-500/20 blur-2xl -z-10" />
 
                   {/* Hero Visual Image */}
-                  <div className="relative w-full h-full rounded-3xl overflow-hidden border border-indigo-500/20 dark:border-indigo-400/20 shadow-2xl bg-gradient-to-b from-slate-950/90 to-slate-900/90 [mask-image:radial-gradient(circle_at_center,black_75%,transparent_100%)]">
+                  <div className="relative w-full h-full rounded-3xl overflow-hidden border border-red-500/20 dark:border-red-400/20 shadow-2xl bg-gradient-to-b from-slate-950/90 to-slate-900/90 [mask-image:radial-gradient(circle_at_center,black_75%,transparent_100%)]">
                     <Image
                       src="/hero-adventurer.jpg"
                       alt="LIFE RPG Adventurer Hero Character on Level Progression Pedestal"
@@ -216,7 +216,7 @@ export default function MarketingPage() {
                     transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
                     className="absolute -top-3 -left-2 sm:-left-6 z-20 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-surface/90 dark:bg-surface/95 backdrop-blur-md border border-border shadow-lg"
                   >
-                    <div className="h-7 w-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-500 shrink-0">
+                    <div className="h-7 w-7 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-500 shrink-0">
                       <Sparkles className="h-3.5 w-3.5" />
                     </div>
                     <div className="text-left">
@@ -231,7 +231,7 @@ export default function MarketingPage() {
                     transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
                     className="absolute -bottom-3 -left-2 sm:-left-4 z-20 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-surface/90 dark:bg-surface/95 backdrop-blur-md border border-border shadow-lg"
                   >
-                    <div className="h-7 w-7 rounded-lg bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-500 shrink-0">
+                    <div className="h-7 w-7 rounded-lg bg-red-500/15 border border-red-500/30 flex items-center justify-center text-red-500 shrink-0">
                       <Shield className="h-3.5 w-3.5" />
                     </div>
                     <div className="text-left">

@@ -56,9 +56,9 @@ export default function RootLayout({
               (function() {
                 try {
                   var saved = localStorage.getItem('liferpg-theme');
-                  var theme = (saved === 'dark' || saved === 'orange' || saved === 'light') ? saved : 'light';
+                  var theme = (saved === 'dark' || saved === 'orange' || saved === 'light' || saved === 'red') ? saved : 'red';
                   document.documentElement.setAttribute('data-theme', theme);
-                  if (theme === 'dark' || theme === 'orange') {
+                  if (theme === 'dark' || theme === 'orange' || theme === 'red') {
                     document.documentElement.classList.add('dark');
                   } else {
                     document.documentElement.classList.remove('dark');

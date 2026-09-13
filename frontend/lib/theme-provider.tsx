@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-export type Theme = 'light' | 'dark' | 'orange';
+export type Theme = 'light' | 'dark' | 'red' | 'orange';
 
 interface ThemeContextType {
   theme: Theme;
@@ -18,7 +18,7 @@ export function applyTheme(theme: Theme) {
   const root = document.documentElement;
   root.setAttribute('data-theme', theme);
 
-  if (theme === 'dark' || theme === 'orange') {
+  if (theme === 'dark' || theme === 'orange' || theme === 'red') {
     root.classList.add('dark');
   } else {
     root.classList.remove('dark');
@@ -26,19 +26,20 @@ export function applyTheme(theme: Theme) {
 }
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [theme, setThemeState] = React.useState<Theme>('light');
+  const [theme, setThemeState] = React.useState<Theme>('red');
 
   React.useEffect(() => {
     try {
       const stored = localStorage.getItem(THEME_STORAGE_KEY) as Theme | null;
-      if (stored === 'light' || stored === 'dark' || stored === 'orange') {
+      if (stored === 'light' || stored === 'dark' || stored === 'red' || stored === 'orange') {
         setThemeState(stored);
         applyTheme(stored);
       } else {
-        applyTheme('light');
+        setThemeState('red');
+        applyTheme('red');
       }
     } catch {
-      applyTheme('light');
+      applyTheme('red');
     }
   }, []);
 

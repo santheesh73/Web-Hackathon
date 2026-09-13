@@ -365,7 +365,7 @@ export default function DashboardPage() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-sm font-bold tracking-tight text-foreground flex items-center gap-1.5">
-                  <Shield className="h-4 w-4 text-indigo-500" /> Character Mastery
+                  <Shield className="h-4 w-4 text-red-500" /> Character Mastery
                 </h3>
               </div>
 
@@ -374,7 +374,7 @@ export default function DashboardPage() {
                   <Card variant="interactive" className="p-3.5 group">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
-                        <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
+                        <div className="p-2 rounded-xl bg-red-500/10 text-red-600 dark:text-red-400 border border-red-500/20">
                           <Shield className="h-4 w-4" />
                         </div>
                         <div>

@@ -39,13 +39,13 @@ export function ProgressionSummary({
         <Card className="p-3.5 sm:p-4 border-border bg-surface flex flex-col justify-between hover:border-primary/40 hover:-translate-y-0.5 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-muted-foreground">Active Quests</span>
-            <div className="h-6 w-6 rounded-lg bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+            <div className="h-6 w-6 rounded-lg bg-red-500/10 text-red-600 dark:text-red-400 flex items-center justify-center">
               <Swords className="h-3.5 w-3.5" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
             <span className="text-xl sm:text-2xl font-black text-foreground">{activeQuestsCount}</span>
-            <span className="text-[11px] text-indigo-600 dark:text-indigo-400 font-semibold">in progress</span>
+            <span className="text-[11px] text-red-600 dark:text-red-400 font-semibold">in progress</span>
           </div>
         </Card>
 

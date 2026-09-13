@@ -64,9 +64,9 @@ export function AttributeRadar({
       >
         <defs>
           <linearGradient id="radarGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#4f46e5" stopOpacity="0.45" />
-            <stop offset="50%" stopColor="#8b5cf6" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#d97706" stopOpacity="0.35" />
+            <stop offset="0%" stopColor="#ef4444" stopOpacity="0.45" />
+            <stop offset="50%" stopColor="#f43f5e" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#e11d48" stopOpacity="0.35" />
           </linearGradient>
         </defs>
 
@@ -111,7 +111,7 @@ export function AttributeRadar({
         <polygon
           points={dataPoints}
           fill="url(#radarGradient)"
-          stroke="#6366f1"
+          stroke="#ef4444"
           strokeWidth="2.5"
           className="transition-all duration-300 drop-shadow-sm"
         />
@@ -125,7 +125,7 @@ export function AttributeRadar({
                 cx={x}
                 cy={y}
                 r="4.5"
-                className="fill-indigo-600 stroke-background stroke-2 transition-all hover:r-6"
+                className="fill-red-600 stroke-background stroke-2 transition-all hover:r-6"
               />
             </g>
           );

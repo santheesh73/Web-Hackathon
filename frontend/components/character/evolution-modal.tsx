@@ -37,10 +37,10 @@ export function EvolutionModal({
             initial={{ scale: 0, rotate: -30 }}
             animate={{ scale: 1, rotate: 0 }}
             transition={{ type: 'spring', damping: 12, stiffness: 200 }}
-            className="w-20 h-20 rounded-full bg-gradient-to-tr from-amber-500 via-purple-600 to-indigo-600 p-0.5 shadow-xl shadow-purple-500/25 flex items-center justify-center"
+            className="w-20 h-20 rounded-full bg-gradient-to-tr from-red-600 via-rose-500 to-amber-500 p-0.5 shadow-xl shadow-red-500/25 flex items-center justify-center"
           >
             <div className="w-full h-full bg-background rounded-full flex items-center justify-center">
-              <Crown className="w-10 h-10 text-amber-500 animate-bounce" />
+              <Crown className="w-10 h-10 text-red-500 animate-bounce" />
             </div>
           </motion.div>
         </div>
@@ -56,9 +56,9 @@ export function EvolutionModal({
             New Ascended Title
           </span>
           <h3 className="text-xl font-extrabold text-foreground tracking-tight flex items-center justify-center gap-2">
-            <Sparkles className="h-5 w-5 text-amber-500" />
+            <Sparkles className="h-5 w-5 text-red-500" />
             {title}
-            <Sparkles className="h-5 w-5 text-amber-500" />
+            <Sparkles className="h-5 w-5 text-red-500" />
           </h3>
           <p className="text-xs text-muted-foreground font-medium">
             Tier {tier}: {tierName} Rank

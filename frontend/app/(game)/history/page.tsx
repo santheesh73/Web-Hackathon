@@ -73,8 +73,8 @@ export default function HistoryPage() {
           badgeText: `+${q.xpReward} XP`,
           badgeVariant: 'accent',
           icon: Swords,
-          iconColor: 'text-indigo-500',
-          iconBg: 'bg-indigo-500/10 border-indigo-500/20',
+          iconColor: 'text-red-500',
+          iconBg: 'bg-red-500/10 border-red-500/20',
           xpDelta: q.xpReward,
         });
       });
@@ -185,7 +185,7 @@ export default function HistoryPage() {
         {/* Milestone Quick Summary Pills */}
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2 bg-card/60 backdrop-blur-md border border-border/60 px-3.5 py-1.5 rounded-xl shadow-sm">
-            <Swords className="w-4 h-4 text-indigo-500" />
+            <Swords className="w-4 h-4 text-red-500" />
             <span className="text-xs font-semibold text-foreground">
               {completedQuestsCount} Quests Conquered
             </span>

@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { motion, HTMLMotionProps } from 'framer-motion';
@@ -39,7 +39,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         'border border-border bg-surface hover:bg-surface-muted text-foreground shadow-subtle',
       ghost: 'hover:bg-muted text-foreground hover:text-foreground',
       destructive: 'bg-danger text-danger-foreground hover:bg-danger/90 shadow-sm',
-      rpg: 'bg-gradient-to-r from-amber-500 to-amber-600 text-white hover:from-amber-600 hover:to-amber-700 shadow-sm font-semibold tracking-wide',
+      rpg: 'bg-gradient-to-r from-red-600 to-rose-600 text-white hover:from-red-700 hover:to-rose-700 shadow-sm font-semibold tracking-wide',
     };
 
     const sizes = {

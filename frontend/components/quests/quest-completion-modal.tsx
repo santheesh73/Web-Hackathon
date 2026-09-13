@@ -103,17 +103,17 @@ export function QuestCompletionModal({
 
         {/* Quest Chain Progress if active */}
         {chainProgress && (
-          <div className="p-3.5 rounded-xl border border-indigo-200 bg-indigo-50/50 space-y-2 text-xs">
+          <div className="p-3.5 rounded-xl border border-red-200 dark:border-red-900/60 bg-red-50/50 dark:bg-red-950/30 space-y-2 text-xs">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 font-bold text-indigo-900">
-                <Layers className="h-4 w-4 text-indigo-600" />
+              <div className="flex items-center gap-1.5 font-bold text-red-900 dark:text-red-200">
+                <Layers className="h-4 w-4 text-red-600 dark:text-red-400" />
                 <span>{chainProgress.chainTitle}</span>
               </div>
               <Badge variant="neutral" size="sm">
                 Step {chainProgress.completedStepOrder} of {chainProgress.totalSteps}
               </Badge>
             </div>
-            <p className="text-indigo-700 text-[11px]">
+            <p className="text-red-700 dark:text-red-300 text-[11px]">
               {chainProgress.isChainCompleted
                 ? 'Mastery Achieved! Entire quest chain completed!'
                 : `Step ${chainProgress.completedStepOrder} completed. Next step unlocked!`}
@@ -125,7 +125,7 @@ export function QuestCompletionModal({
         {result.attributeGain && (
           <div className="p-3 rounded-xl border border-border/80 bg-muted/30 flex items-center justify-between text-xs">
             <div className="flex items-center gap-2">
-              <Zap className="h-4 w-4 text-indigo-500" />
+              <Zap className="h-4 w-4 text-red-500" />
               <div>
                 <span className="font-semibold text-foreground">
                   +{result.attributeGain.xpGained} {result.attributeGain.attributeKey} XP

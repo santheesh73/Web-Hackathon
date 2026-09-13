@@ -59,7 +59,7 @@ export function SkillNodeCard({
     <Card
       variant={skill.isUnlocked ? 'selected' : skill.canUnlock ? 'interactive' : 'muted'}
       className={`relative overflow-hidden transition-all ${
-        skill.canUnlock ? 'ring-2 ring-indigo-500/40 shadow-md' : ''
+        skill.canUnlock ? 'ring-2 ring-red-500/40 shadow-md' : ''
       } ${className}`}
     >
       <CardContent className="p-4 space-y-3">
@@ -107,9 +107,9 @@ export function SkillNodeCard({
           <div
             className={`p-2.5 rounded-xl border shrink-0 ${
               skill.isUnlocked
-                ? 'bg-amber-500/10 border-amber-500/30 text-amber-600 dark:text-amber-400'
+                ? 'bg-red-500/10 border-red-500/30 text-red-600 dark:text-red-400'
                 : skill.canUnlock
-                ? 'bg-indigo-500/10 border-indigo-500/30 text-indigo-600 dark:text-indigo-400'
+                ? 'bg-rose-500/10 border-rose-500/30 text-rose-600 dark:text-rose-400'
                 : 'bg-muted border-border text-muted-foreground'
             }`}
           >

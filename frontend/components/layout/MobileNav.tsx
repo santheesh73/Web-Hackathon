@@ -71,7 +71,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             {/* Header */}
             <div className="flex items-center justify-between pb-4 border-b border-border/70">
               <Link href="/" className="flex items-center gap-2" onClick={onClose}>
-                <div className="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center text-white">
+                <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center text-white shadow-xs">
                   <Shield className="h-4 w-4" />
                 </div>
                 <span className="font-bold text-sm tracking-tight text-foreground">LIFE RPG</span>

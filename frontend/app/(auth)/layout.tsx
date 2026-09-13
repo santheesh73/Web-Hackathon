@@ -8,7 +8,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       {/* Brand Header */}
       <header className="flex justify-center">
         <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-600 to-indigo-800 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-800 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
             <Shield className="h-6 w-6" />
           </div>
           <div>

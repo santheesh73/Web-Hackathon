@@ -13,23 +13,23 @@ interface ThemeOption {
 
 const THEME_OPTIONS: ThemeOption[] = [
   {
-    value: 'light',
-    label: 'Light',
-    icon: <Sun className="h-4 w-4 text-amber-500" aria-hidden="true" />,
+    value: 'red',
+    label: 'Crimson Red',
+    icon: (
+      <span className="inline-flex items-center justify-center h-4 w-4" aria-hidden="true">
+        <Circle className="h-3.5 w-3.5 fill-red-500 text-red-500" />
+      </span>
+    ),
   },
   {
     value: 'dark',
     label: 'Dark',
-    icon: <Moon className="h-4 w-4 text-indigo-400" aria-hidden="true" />,
+    icon: <Moon className="h-4 w-4 text-red-400" aria-hidden="true" />,
   },
   {
-    value: 'orange',
-    label: 'Orange',
-    icon: (
-      <span className="inline-flex items-center justify-center h-4 w-4" aria-hidden="true">
-        <Circle className="h-3.5 w-3.5 fill-orange-500 text-orange-500" />
-      </span>
-    ),
+    value: 'light',
+    label: 'Light',
+    icon: <Sun className="h-4 w-4 text-rose-500" aria-hidden="true" />,
   },
 ];
 

@@ -15,7 +15,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
       danger: 'bg-rose-50 text-rose-700 border-rose-200',
       info: 'bg-sky-50 text-sky-700 border-sky-200',
       neutral: 'bg-surface-muted text-muted-foreground border-border',
-      rpg: 'bg-gradient-to-r from-amber-500/10 to-amber-600/10 text-amber-700 border-amber-300 font-semibold',
+      rpg: 'bg-gradient-to-r from-red-500/10 to-rose-600/10 text-red-700 dark:text-red-400 border-red-300 dark:border-red-800 font-semibold',
     };
 
     const sizes = {

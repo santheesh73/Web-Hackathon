@@ -41,14 +41,14 @@ export function SkillUnlockModal({
           </Badge>
         </div>
 
-        <div className="p-3.5 rounded-xl border border-indigo-200 dark:border-indigo-900 bg-indigo-50/40 dark:bg-indigo-950/30">
+        <div className="p-3.5 rounded-xl border border-red-200 dark:border-red-900 bg-red-50/40 dark:bg-red-950/30">
           <div className="flex items-start gap-2.5">
-            <Zap className="h-4 w-4 text-indigo-600 dark:text-indigo-400 shrink-0 mt-0.5" />
+            <Zap className="h-4 w-4 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
             <div>
-              <span className="font-semibold text-xs text-indigo-950 dark:text-indigo-200">
+              <span className="font-semibold text-xs text-red-950 dark:text-red-200">
                 Permanent Passive Perk
               </span>
-              <p className="text-xs text-indigo-900 dark:text-indigo-300 mt-0.5">
+              <p className="text-xs text-red-900 dark:text-red-300 mt-0.5">
                 {skill.perkEffect}
               </p>
             </div>

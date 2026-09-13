@@ -26,7 +26,7 @@ export function Sidebar({ characterName = 'Adventurer' }: SidebarProps) {
       {/* Brand Header */}
       <div className="h-14 flex items-center px-5 border-b border-border/70">
         <Link href="/dashboard" className="flex items-center gap-2.5 group">
-          <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
+          <div className="h-8 w-8 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 flex items-center justify-center text-white shadow-sm transition-transform group-hover:scale-105">
             <Shield className="h-4.5 w-4.5" />
           </div>
           <div>

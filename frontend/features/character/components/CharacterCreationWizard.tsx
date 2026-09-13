@@ -272,7 +272,7 @@ export function CharacterCreationWizard() {
                     Live Preview Card
                   </span>
                   <div className="flex items-center gap-3">
-                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-500 to-indigo-700 text-white flex items-center justify-center font-bold text-sm shadow-sm">
+                    <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-red-600 to-rose-700 text-white flex items-center justify-center font-bold text-sm shadow-sm">
                       {characterName ? characterName.charAt(0).toUpperCase() : '?'}
                     </div>
                     <div>

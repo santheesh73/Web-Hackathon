@@ -88,7 +88,7 @@ export function QuestChainCard({ chain, className }: QuestChainCardProps) {
               className={`h-full rounded-full transition-all duration-500 ${
                 isCompleted
                   ? 'bg-emerald-500'
-                  : 'bg-gradient-to-r from-primary to-indigo-600'
+                  : 'bg-gradient-to-r from-primary to-rose-600'
               }`}
               style={{ width: `${chain.progressPercent}%` }}
             />
