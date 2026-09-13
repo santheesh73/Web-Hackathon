@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { motion } from 'framer-motion';
 import {
   Shield,
@@ -131,49 +132,132 @@ export default function MarketingPage() {
       {/* Main Content */}
       <main className="flex-1">
         {/* HERO SECTION */}
-        <section className="py-20 sm:py-28 px-4 sm:px-6 border-b border-border/60 bg-gradient-to-b from-surface via-background to-background relative overflow-hidden flex flex-col items-center justify-center">
+        <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 border-b border-border/60 bg-gradient-to-b from-surface via-background to-background relative overflow-hidden">
           {/* Ambient Glows */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] sm:w-[680px] h-[320px] bg-gradient-to-tr from-indigo-500/15 via-purple-500/15 to-amber-500/10 rounded-full blur-3xl pointer-events-none -z-10" />
+          <div className="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[300px] bg-primary/15 rounded-full blur-3xl pointer-events-none -z-10" />
+          <div className="absolute top-1/2 right-10 -translate-y-1/2 w-[500px] h-[400px] bg-indigo-500/15 dark:bg-indigo-500/25 rounded-full blur-3xl pointer-events-none -z-10" />
 
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={smoothTransition}
-            className="max-w-4xl mx-auto text-center space-y-6 relative z-10"
-          >
-            {/* Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.2 rounded-full border border-indigo-200 dark:border-indigo-800/80 bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-medium shadow-xs">
-              <Sparkles className="h-3.5 w-3.5" />
-              <span>Real-Life Productivity Reimagined</span>
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+              {/* LEFT COLUMN: Eyebrow, Headline, Description, CTAs */}
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={smoothTransition}
+                className="lg:col-span-7 text-center lg:text-left space-y-6"
+              >
+                {/* Eyebrow */}
+                <div>
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-indigo-200 dark:border-indigo-800/80 bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 text-xs font-medium shadow-xs">
+                    <Sparkles className="h-3.5 w-3.5" />
+                    <span>Real-Life Productivity Reimagined</span>
+                  </div>
+                </div>
+
+                {/* Headline */}
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold tracking-tight text-foreground leading-[1.12]">
+                  What if your real life had<br className="hidden sm:inline" />
+                  {' '}an <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">RPG progression</span><br />
+                  <span className="text-amber-500 font-black">system?</span>
+                </h1>
+
+                {/* Supporting description */}
+                <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                  Transform everyday tasks, habits, and monumental goals into quests. Earn experience, build unbroken streaks, advance skill trees, vanquish bosses, and forge your personal legend.
+                </p>
+
+                {/* CTAs */}
+                <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
+                  <Link href="/signup">
+                    <Button size="lg" variant="rpg" className="gap-2 text-sm font-semibold shadow-md h-11 px-7 rounded-xl">
+                      <span>Start Your Journey</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Button>
+                  </Link>
+                  <Link href="/login">
+                    <Button size="lg" variant="outline" className="text-sm font-semibold h-11 px-7 rounded-xl border-border bg-surface hover:bg-surface-muted shadow-xs">
+                      <span>Sign In & Resume</span>
+                    </Button>
+                  </Link>
+                </div>
+              </motion.div>
+
+              {/* RIGHT COLUMN: Large Primary Visual + 3 Floating Badges */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.4, delay: 0.15 }}
+                className="lg:col-span-5 relative flex items-center justify-center"
+              >
+                {/* Floating container */}
+                <motion.div
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                  className="relative w-full max-w-[340px] sm:max-w-[400px] lg:max-w-[440px] aspect-square flex items-center justify-center"
+                >
+                  {/* Outer Ambient Glow Ring */}
+                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-tr from-indigo-500/25 via-purple-500/20 to-amber-500/20 blur-2xl -z-10" />
+
+                  {/* Hero Visual Image */}
+                  <div className="relative w-full h-full rounded-3xl overflow-hidden border border-indigo-500/20 dark:border-indigo-400/20 shadow-2xl bg-gradient-to-b from-slate-950/90 to-slate-900/90 [mask-image:radial-gradient(circle_at_center,black_75%,transparent_100%)]">
+                    <Image
+                      src="/hero-adventurer.jpg"
+                      alt="LIFE RPG Adventurer Hero Character on Level Progression Pedestal"
+                      fill
+                      priority
+                      className="object-cover object-center"
+                      sizes="(max-width: 768px) 340px, (max-width: 1200px) 400px, 440px"
+                    />
+                  </div>
+
+                  {/* Supporting Element 1 (Top-Left): Quest Completion & XP Gain */}
+                  <motion.div
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 3.2, repeat: Infinity, ease: 'easeInOut', delay: 0.2 }}
+                    className="absolute -top-3 -left-2 sm:-left-6 z-20 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-surface/90 dark:bg-surface/95 backdrop-blur-md border border-border shadow-lg"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-500 shrink-0">
+                      <Sparkles className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="text-left">
+                      <div className="text-[11px] font-bold text-foreground leading-tight">+150 XP Earned</div>
+                      <div className="text-[9px] text-muted-foreground leading-tight">Quest Completed</div>
+                    </div>
+                  </motion.div>
+
+                  {/* Supporting Element 2 (Bottom-Left): Level Indicator & Archetype */}
+                  <motion.div
+                    animate={{ y: [0, 4, 0] }}
+                    transition={{ duration: 3.6, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
+                    className="absolute -bottom-3 -left-2 sm:-left-4 z-20 flex items-center gap-2.5 px-3 py-2 rounded-xl bg-surface/90 dark:bg-surface/95 backdrop-blur-md border border-border shadow-lg"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-indigo-500/15 border border-indigo-500/30 flex items-center justify-center text-indigo-500 shrink-0">
+                      <Shield className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="text-left">
+                      <div className="text-[11px] font-bold text-foreground leading-tight">Level 12 Novice</div>
+                      <div className="text-[9px] text-muted-foreground leading-tight">Discipline &bull; Rank II</div>
+                    </div>
+                  </motion.div>
+
+                  {/* Supporting Element 3 (Bottom-Right): Consistency Streak */}
+                  <motion.div
+                    animate={{ y: [0, -4, 0] }}
+                    transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                    className="absolute -bottom-3 -right-2 sm:-right-4 z-20 flex items-center gap-2 px-3 py-2 rounded-xl bg-surface/90 dark:bg-surface/95 backdrop-blur-md border border-border shadow-lg"
+                  >
+                    <div className="h-7 w-7 rounded-lg bg-rose-500/15 border border-rose-500/30 flex items-center justify-center text-rose-500 shrink-0">
+                      <Flame className="h-3.5 w-3.5" />
+                    </div>
+                    <div className="text-left">
+                      <div className="text-[11px] font-bold text-foreground leading-tight">14 Day Streak</div>
+                      <div className="text-[9px] text-amber-500 font-semibold leading-tight">2.0x Multiplier</div>
+                    </div>
+                  </motion.div>
+                </motion.div>
+              </motion.div>
             </div>
-
-            {/* Headline matching reference screenshot exactly */}
-            <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-foreground max-w-4xl mx-auto leading-[1.12]">
-              What if your real life had<br />
-              an <span className="bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent">RPG progression</span><br />
-              <span className="text-amber-500 font-black">system?</span>
-            </h1>
-
-            {/* Supporting text */}
-            <p className="text-sm sm:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
-              Transform everyday tasks, habits, and monumental goals into quests. Earn experience, build unbroken streaks, advance skill trees, vanquish bosses, and forge your personal legend.
-            </p>
-
-            {/* CTAs */}
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-3">
-              <Link href="/signup">
-                <Button size="lg" variant="rpg" className="gap-2 text-sm font-semibold shadow-md h-11 px-7 rounded-xl">
-                  <span>Start Your Journey</span>
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
-              <Link href="/login">
-                <Button size="lg" variant="outline" className="text-sm font-semibold h-11 px-7 rounded-xl border-border bg-surface hover:bg-surface-muted shadow-xs">
-                  <span>Sign In & Resume</span>
-                </Button>
-              </Link>
-            </div>
-          </motion.div>
+          </div>
         </section>
 
         {/* 9 CORE PROGRESSION PILLARS */}
