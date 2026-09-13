@@ -86,9 +86,9 @@ export default function QuestDetailsPage() {
   if (loading) {
     return (
       <div className="space-y-6 max-w-3xl mx-auto py-8 px-4">
-        <div className="h-6 w-32 bg-slate-200 animate-pulse rounded" />
-        <div className="h-12 w-3/4 bg-slate-200 animate-pulse rounded-lg" />
-        <div className="h-64 w-full bg-slate-200 animate-pulse rounded-2xl" />
+        <div className="h-6 w-32 bg-surface-muted animate-pulse rounded" />
+        <div className="h-12 w-3/4 bg-surface-muted animate-pulse rounded-lg" />
+        <div className="h-64 w-full bg-surface-muted animate-pulse rounded-2xl" />
       </div>
     );
   }

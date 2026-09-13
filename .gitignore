@@ -42,5 +42,7 @@ Thumbs.db
 # Vitest
 .vitest/
 
+*.tsbuildinfo
+
 .temp/
 supabase/.temp/

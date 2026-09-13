@@ -56,7 +56,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm"
+            className="fixed inset-0 bg-overlay/50 backdrop-blur-sm"
             aria-hidden="true"
           />
 

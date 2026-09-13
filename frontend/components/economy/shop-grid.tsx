@@ -1,10 +1,12 @@
 'use client';
 
 import * as React from 'react';
+import { motion } from 'framer-motion';
 import { Search, ShoppingBag, Sparkles, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { ShopItemCard } from './shop-item-card';
+import { staggerContainer, fadeInUp } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import type { ShopItemWithOwnership } from '@/../src/shared/types/economy';
 import type { ShopCategoryTab } from '@/features/rewards/types';
@@ -41,9 +43,9 @@ export function ShopGrid({
   const ownedCount = items.filter((i) => i.isOwned).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-5">
       {/* Controls Bar: Category Tabs & Search Bar */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         {/* Category Tabs */}
         <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
           {CATEGORY_TABS.map((tab) => {
@@ -54,7 +56,7 @@ export function ShopGrid({
                 type="button"
                 onClick={() => onSelectCategory(tab.key)}
                 className={cn(
-                  'px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
+                  'px-3 py-1.5 rounded-lg text-xs font-medium transition-all whitespace-nowrap',
                   isActive
                     ? 'bg-amber-500 text-white shadow-sm font-semibold'
                     : 'bg-surface-muted/60 text-muted-foreground hover:bg-surface-muted hover:text-foreground'
@@ -73,13 +75,13 @@ export function ShopGrid({
             value={searchQuery}
             onChange={(e) => onSearchChange(e.target.value)}
             placeholder="Search items..."
-            className="pl-9 h-9 text-xs"
+            className="pl-9 h-8 text-xs"
           />
         </div>
       </div>
 
       {/* Grid Meta Info */}
-      <div className="flex items-center justify-between text-xs text-muted-foreground px-1">
+      <div className="flex items-center justify-between text-xs text-muted-foreground px-0.5">
         <span>
           Showing {items.length} {items.length === 1 ? 'reward' : 'rewards'}
         </span>
@@ -90,16 +92,23 @@ export function ShopGrid({
 
       {/* Items Grid */}
       {items.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <motion.div
+          key={selectedCategory}
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4"
+        >
           {items.map((item) => (
-            <ShopItemCard
-              key={item.id}
-              item={item}
-              characterGold={characterGold}
-              onSelect={onSelectItem}
-            />
+            <motion.div key={item.id} variants={fadeInUp}>
+              <ShopItemCard
+                item={item}
+                characterGold={characterGold}
+                onSelect={onSelectItem}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       ) : (
         <div className="flex flex-col items-center justify-center p-12 text-center rounded-2xl border border-dashed border-border/80 bg-surface-muted/30">
           <div className="w-12 h-12 rounded-full bg-amber-500/10 flex items-center justify-center text-amber-500 mb-3">

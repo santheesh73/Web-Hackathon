@@ -65,13 +65,13 @@ export default function CharacterPage() {
 
   return (
     <PageContainer>
-      <div className="space-y-6">
+      <div className="space-y-5">
       {/* Character Header Banner */}
-      <div className="p-6 rounded-2xl border border-border bg-gradient-to-r from-card via-muted/30 to-card shadow-sm">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
+      <div className="p-4 sm:p-5 rounded-2xl border border-border bg-gradient-to-r from-card via-muted/30 to-card shadow-sm">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5">
+          <div className="flex items-center gap-3.5">
             <div
-              className={`w-16 h-16 rounded-2xl border flex items-center justify-center bg-background shadow-md relative transition-all ${
+              className={`w-14 h-14 rounded-2xl border flex items-center justify-center bg-background shadow-sm relative transition-all ${
                 evolution?.auraClass || ''
               }`}
               style={
@@ -147,9 +147,9 @@ export default function CharacterPage() {
       <EquippedFlair equipment={equipment} />
 
       {/* Main Grid: Radar & Attributes */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
         {/* Left Column: Attribute Radar & Evolution Progress */}
-        <div className="lg:col-span-5 space-y-6">
+        <div className="lg:col-span-5 space-y-5">
           {/* Radar Chart Card */}
           <Card variant="default">
             <CardHeader className="pb-2">

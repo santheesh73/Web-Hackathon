@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
@@ -61,7 +61,7 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
           aria-valuemax={max}
           aria-label={label || 'Progress'}
           className={cn(
-            'w-full overflow-hidden rounded-full bg-slate-100 border border-slate-200/60 relative',
+            'w-full overflow-hidden rounded-full bg-surface-muted border border-border/60 relative',
             heights[size]
           )}
         >

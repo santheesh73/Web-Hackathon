@@ -91,51 +91,45 @@ export default function DashboardPage() {
 
   return (
     <PageContainer size="lg">
-      <div className="space-y-6">
+      <div className="space-y-5">
         {/* 1. Personalized Hero Banner */}
-        <div className="p-5 sm:p-6 rounded-2xl border border-border bg-gradient-to-r from-surface via-surface to-surface-muted shadow-xs space-y-5">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4">
+        <div className="p-4 sm:p-5 rounded-2xl border border-border bg-gradient-to-r from-surface via-surface to-surface-muted shadow-xs space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+            <div className="flex items-center gap-3.5">
               <div
-                className={`h-14 w-14 sm:h-16 sm:w-16 rounded-2xl bg-gradient-to-br ${avatarInfo.color} flex items-center justify-center text-white shadow-sm shrink-0`}
+                className={`h-12 w-12 sm:h-14 sm:w-14 rounded-2xl bg-gradient-to-br ${avatarInfo.color} flex items-center justify-center text-white shadow-sm shrink-0`}
               >
-                <AvatarIcon className="h-7 w-7 sm:h-8 sm:w-8" />
+                <AvatarIcon className="h-6 w-6 sm:h-7 sm:w-7" />
               </div>
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-foreground">
+                  <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground">
                     {charName}
                   </h2>
                   <Badge variant="rpg" size="sm">
-                    Level {charLevel}
+                    Lvl {charLevel}
                   </Badge>
                   {evolution && (
                     <EvolutionBadge evolution={evolution} size="sm" />
                   )}
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Archetype: <span className="font-semibold text-foreground">{avatarInfo.name}</span>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {avatarInfo.name} Archetype
                   <span className="mx-1.5 text-border">&bull;</span>
-                  Focus:{' '}
-                  <span className="font-semibold text-foreground capitalize">
-                    {character?.lifeFocus || 'Learning'}
-                  </span>
+                  <span className="capitalize">{character?.lifeFocus || 'Productivity'}</span> Focus
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <Link href="/shop" className="hover:opacity-90 transition-opacity">
-                <CurrencyDisplay amount={character?.gold ?? 0} size="md" />
-              </Link>
+            <div className="flex items-center gap-2">
               <Link href="/quests/create">
-                <Button variant="rpg" size="sm" className="gap-1.5 shadow-xs">
-                  <PlusCircle className="h-4 w-4" /> New Quest
+                <Button variant="rpg" size="sm" className="gap-1.5 shadow-xs text-xs">
+                  <PlusCircle className="h-3.5 w-3.5" /> New Quest
                 </Button>
               </Link>
               <Link href="/quests">
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <Swords className="h-4 w-4" /> Quest Board
+                <Button variant="outline" size="sm" className="gap-1.5 text-xs">
+                  <Swords className="h-3.5 w-3.5" /> Quests
                 </Button>
               </Link>
             </div>
@@ -146,22 +140,18 @@ export default function DashboardPage() {
             <XPBar xp={charXp} showDetails />
           </div>
 
-          {/* Actionable Directive: "What should I do next?" */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-primary/5 border border-primary/15 rounded-xl p-3">
-            <div className="flex items-center gap-2.5 min-w-0">
-              <div className="w-7 h-7 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shrink-0">
-                <Compass className="w-4 h-4" />
-              </div>
-              <div className="text-xs min-w-0">
-                <span className="font-bold text-foreground">Suggested Action: </span>
-                <span className="text-muted-foreground">
-                  {activeQuests.length > 0
-                    ? `Complete "${activeQuests[0].title}" (+${activeQuests[0].xpReward} XP) to build streak momentum!`
-                    : activeBoss
-                    ? `Conquer linked objectives to defeat "${activeBoss.title}"!`
-                    : 'Create your first quest to begin earning XP and unlocking attributes.'}
-                </span>
-              </div>
+          {/* Actionable Directive: Compact Single-Line */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 bg-primary/5 border border-primary/15 rounded-xl px-3 py-2 text-xs">
+            <div className="flex items-center gap-2 min-w-0">
+              <Compass className="w-3.5 h-3.5 text-primary shrink-0" />
+              <span className="font-semibold text-foreground shrink-0">Next Goal:</span>
+              <span className="text-muted-foreground truncate">
+                {activeQuests.length > 0
+                  ? `"${activeQuests[0].title}" (+${activeQuests[0].xpReward} XP)`
+                  : activeBoss
+                  ? `Battle "${activeBoss.title}"`
+                  : 'Embark on your first quest to earn XP!'}
+              </span>
             </div>
             <Link
               href={
@@ -171,17 +161,15 @@ export default function DashboardPage() {
                   ? `/boss-quests`
                   : '/quests/create'
               }
-              className="shrink-0 self-end sm:self-auto"
+              className="shrink-0 self-end sm:self-auto font-semibold text-primary hover:underline inline-flex items-center gap-1 text-[11px]"
             >
-              <Button size="sm" variant="ghost" className="text-xs text-primary hover:text-primary gap-1 h-7 px-2.5 font-semibold">
-                <span>{activeQuests.length > 0 ? 'Conquer Quest' : activeBoss ? 'Battle Boss' : 'Start Quest'}</span>
-                <ArrowRight className="w-3 h-3" />
-              </Button>
+              <span>{activeQuests.length > 0 ? 'Conquer' : activeBoss ? 'Battle' : 'Start'}</span>
+              <ArrowRight className="w-3 h-3" />
             </Link>
           </div>
         </div>
 
-        {/* 2. Live HUD Overview Metrics (Non-redundant vitals) */}
+        {/* 2. Live HUD Overview Metrics */}
         <ProgressionSummary
           xp={charXp}
           level={charLevel}
@@ -191,33 +179,28 @@ export default function DashboardPage() {
           availableSp={treeData?.availableSkillPoints ?? 0}
         />
 
-        {/* 3. Balanced Asymmetric 2-Column Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          {/* LEFT COLUMN: Main Adventure Canvas (Quests, Chains, Bosses) */}
-          <div className="lg:col-span-8 space-y-6">
+        {/* 3. Balanced 2-Column Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          {/* LEFT COLUMN: Main Adventure Canvas */}
+          <div className="lg:col-span-8 space-y-5">
             {/* Active & Recent Quests */}
-            <div className="space-y-3.5">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold tracking-tight text-foreground flex items-center gap-2">
-                    <Swords className="h-5 w-5 text-primary" /> Active & Recent Quests
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    Real-world actions ready to conquer for experience and hero advancement.
-                  </p>
-                </div>
+                <h3 className="text-base font-bold tracking-tight text-foreground flex items-center gap-2">
+                  <Swords className="h-4.5 w-4.5 text-primary" /> Active Quests
+                </h3>
                 <Link
                   href="/quests"
                   className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1 shrink-0"
                 >
-                  View all ({allQuests.length}) <ArrowRight className="h-3.5 w-3.5" />
+                  View all ({allQuests.length}) <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
 
               {questsLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="h-28 rounded-xl bg-slate-100 animate-pulse border border-border" />
-                  <div className="h-28 rounded-xl bg-slate-100 animate-pulse border border-border" />
+                  <div className="h-28 rounded-xl bg-surface-muted animate-pulse border border-border" />
+                  <div className="h-28 rounded-xl bg-surface-muted animate-pulse border border-border" />
                 </div>
               ) : recentQuests.length === 0 ? (
                 <Card className="p-8 text-center border-dashed border-2 border-border bg-surface/50 space-y-3">
@@ -285,44 +268,39 @@ export default function DashboardPage() {
             </div>
 
             {/* Active Quest Chains */}
-            <div className="space-y-3.5">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold tracking-tight text-foreground flex items-center gap-2">
-                    <Layers className="h-5 w-5 text-primary" /> Active Quest Chains
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    Sequential roadmaps that unlock step-by-step for ambitious goals.
-                  </p>
-                </div>
+                <h3 className="text-base font-bold tracking-tight text-foreground flex items-center gap-2">
+                  <Layers className="h-4.5 w-4.5 text-primary" /> Quest Chains
+                </h3>
                 <Link
                   href="/quests/chains"
                   className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1 shrink-0"
                 >
-                  View all ({chains.length}) <ArrowRight className="h-3.5 w-3.5" />
+                  View all ({chains.length}) <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
 
               {chainsLoading ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div className="h-36 rounded-2xl bg-slate-100 animate-pulse border border-border" />
-                  <div className="h-36 rounded-2xl bg-slate-100 animate-pulse border border-border" />
+                  <div className="h-32 rounded-xl bg-surface-muted animate-pulse border border-border" />
+                  <div className="h-32 rounded-xl bg-surface-muted animate-pulse border border-border" />
                 </div>
               ) : activeChains.length === 0 ? (
-                <Card className="p-6 text-center border-dashed border-2 border-border bg-surface/40 space-y-3">
-                  <div className="h-9 w-9 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto">
+                <Card className="p-5 text-center border-dashed border-2 border-border bg-surface/40 space-y-2.5">
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center mx-auto">
                     <Layers className="h-4 w-4" />
                   </div>
                   <div>
                     <h4 className="font-bold text-foreground text-sm">No Active Quest Chains</h4>
                     <p className="text-xs text-muted-foreground max-w-sm mx-auto mt-0.5">
-                      Break a major life project into a sequence of ordered steps with automatic progression.
+                      Break a major project into sequential steps with automatic progression.
                     </p>
                   </div>
-                  <div className="pt-1">
+                  <div className="pt-0.5">
                     <Link href="/quests/chains/create">
-                      <Button variant="rpg" size="sm" className="gap-1.5">
-                        <PlusCircle className="h-3.5 w-3.5" /> Create Quest Chain
+                      <Button variant="rpg" size="sm" className="gap-1.5 text-xs">
+                        <PlusCircle className="h-3.5 w-3.5" /> Create Chain
                       </Button>
                     </Link>
                   </div>
@@ -337,21 +315,16 @@ export default function DashboardPage() {
             </div>
 
             {/* Boss Quests System */}
-            <div className="space-y-3.5">
+            <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <div>
-                  <h3 className="text-base sm:text-lg font-bold tracking-tight text-foreground flex items-center gap-2">
-                    <Flame className="h-5 w-5 text-red-500" /> Active Boss Encounters
-                  </h3>
-                  <p className="text-xs text-muted-foreground">
-                    Major life milestones structured as multi-stage battle objectives.
-                  </p>
-                </div>
+                <h3 className="text-base font-bold tracking-tight text-foreground flex items-center gap-2">
+                  <Flame className="h-4.5 w-4.5 text-red-500" /> Boss Encounters
+                </h3>
                 <Link
                   href="/boss-quests"
                   className="text-xs font-semibold text-primary hover:underline inline-flex items-center gap-1 shrink-0"
                 >
-                  View Boss Quests ({bossQuests.length}) <ArrowRight className="h-3.5 w-3.5" />
+                  View all ({bossQuests.length}) <ArrowRight className="h-3 w-3" />
                 </Link>
               </div>
 
@@ -376,7 +349,7 @@ export default function DashboardPage() {
           </div>
 
           {/* RIGHT COLUMN: Progression & Companion Hub (Streak, Mastery, Milestones, Shop) */}
-          <div className="lg:col-span-4 space-y-6">
+          <div className="lg:col-span-4 space-y-5">
             {/* Daily Consistency (Streak & Calendar) */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
@@ -396,9 +369,9 @@ export default function DashboardPage() {
                 </h3>
               </div>
 
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <Link href="/character" className="block">
-                  <Card variant="interactive" className="p-4 group">
+                  <Card variant="interactive" className="p-3.5 group">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
                         <div className="p-2 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border border-indigo-500/20">
@@ -421,7 +394,7 @@ export default function DashboardPage() {
                 </Link>
 
                 <Link href="/skill-tree" className="block">
-                  <Card variant="interactive" className="p-4 group">
+                  <Card variant="interactive" className="p-3.5 group">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2.5">
                         <div className="p-2 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20">

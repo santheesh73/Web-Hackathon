@@ -2,10 +2,11 @@
   "name": "life-rpg-backend",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/backend/src/server.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "tsc",
-    "start": "node dist/server.js",
+    "build": "tsc && node -e \"const fs=require('fs'); if(!fs.existsSync('dist/server.js')) fs.writeFileSync('dist/server.js', 'require(\\\"./backend/src/server.js\\\");');\"",
+    "start": "node dist/backend/src/server.js",
     "test": "vitest run",
     "lint": "eslint src tests"
   },

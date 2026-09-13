@@ -2,9 +2,11 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Trophy, Swords, ArrowRight } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { staggerContainer, fadeInUp } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import type { AchievementWithProgress } from '@/../src/shared/types/achievement';
 import { AchievementCard } from './achievement-card';
@@ -71,14 +73,20 @@ export function AchievementGrid({
   }
 
   return (
-    <div className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4', className)}>
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      className={cn('grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4', className)}
+    >
       {achievements.map((ach) => (
-        <AchievementCard
-          key={ach.id}
-          achievement={ach}
-          onSelect={onSelect}
-        />
+        <motion.div key={ach.id} variants={fadeInUp}>
+          <AchievementCard
+            achievement={ach}
+            onSelect={onSelect}
+          />
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }

@@ -50,9 +50,9 @@ export default function QuestChainDetailPage() {
   if (loading) {
     return (
       <div className="space-y-6 max-w-4xl mx-auto py-8 px-4">
-        <div className="h-6 w-36 bg-slate-200 animate-pulse rounded" />
-        <div className="h-12 w-2/3 bg-slate-200 animate-pulse rounded-lg" />
-        <div className="h-64 w-full bg-slate-100 animate-pulse rounded-2xl" />
+        <div className="h-6 w-36 bg-surface-muted animate-pulse rounded" />
+        <div className="h-12 w-2/3 bg-surface-muted animate-pulse rounded-lg" />
+        <div className="h-64 w-full bg-surface-muted animate-pulse rounded-2xl" />
       </div>
     );
   }
@@ -149,7 +149,7 @@ export default function QuestChainDetailPage() {
             aria-valuemin={0}
             aria-valuemax={100}
             aria-label={`${chain.title} completion progress`}
-            className="w-full h-3 rounded-full bg-slate-100 border border-slate-200/80 overflow-hidden"
+            className="w-full h-3 rounded-full bg-surface-muted border border-border/80 overflow-hidden"
           >
             <div
               className={`h-full rounded-full transition-all duration-500 ${
@@ -196,7 +196,7 @@ export default function QuestChainDetailPage() {
                     ? 'border-emerald-200 bg-emerald-50/20'
                     : isStepAvailable
                     ? 'border-primary ring-2 ring-primary/20 bg-surface shadow-sm'
-                    : 'border-slate-200/80 bg-slate-50/60 opacity-65'
+                    : 'border-border bg-surface-muted/60 opacity-65'
                 }`}
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -208,7 +208,7 @@ export default function QuestChainDetailPage() {
                           ? 'bg-emerald-500 text-white'
                           : isStepAvailable
                           ? 'bg-primary text-white shadow-xs'
-                          : 'bg-slate-200 text-slate-500'
+                          : 'bg-surface-muted text-muted-foreground'
                       }`}
                     >
                       {isStepCompleted ? (

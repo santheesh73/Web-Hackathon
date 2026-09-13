@@ -10,6 +10,7 @@ import { useAuth } from '@/hooks/use-auth';
 import { useCharacter } from '@/hooks/use-character';
 import { CurrencyDisplay } from '@/components/economy/currency-display';
 import Link from 'next/link';
+import { ThemeSelector } from './ThemeSelector';
 
 export interface TopbarProps {
   onMobileMenuOpen: () => void;
@@ -73,12 +74,12 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }:
               {apiConnected ? (
                 <>
                   <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-                  <span className="text-[11px] font-medium text-slate-700">API Live</span>
+                  <span className="text-[11px] font-medium text-foreground/80">API Live</span>
                 </>
               ) : (
                 <>
                   <span className="h-2 w-2 rounded-full bg-amber-500" />
-                  <span className="text-[11px] font-medium text-slate-600">API Standby</span>
+                  <span className="text-[11px] font-medium text-muted-foreground">API Standby</span>
                 </>
               )}
             </div>
@@ -88,7 +89,6 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }:
           <Link href="/shop" className="hover:opacity-90 transition-opacity">
             <CurrencyDisplay amount={character?.gold ?? 0} size="sm" />
           </Link>
-
 
           {/* Quick Action Button */}
           <Link href="/quests/create">
@@ -101,11 +101,14 @@ export function Topbar({ onMobileMenuOpen, title = 'Dashboard', characterName }:
             </Button>
           </Link>
 
+          {/* Theme Selector */}
+          <ThemeSelector />
+
           {/* Sign Out Action */}
           <Tooltip content="Sign Out">
             <button
               onClick={handleSignOut}
-              className="p-2 rounded-lg text-muted-foreground hover:bg-rose-50 hover:text-rose-600 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              className="p-2 rounded-lg text-muted-foreground hover:bg-danger/10 hover:text-danger transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Sign Out"
             >
               <LogOut className="h-4 w-4" />

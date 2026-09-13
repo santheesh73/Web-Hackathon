@@ -2,9 +2,11 @@
 
 import * as React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { PackageOpen, Sparkles, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { staggerContainer, fadeInUp } from '@/lib/motion';
 import { cn } from '@/lib/utils';
 import type { InventoryItem, EquipmentSlot } from '@/../src/shared/types/inventory';
 import type { ShopItem } from '@/../src/shared/types/economy';
@@ -79,17 +81,23 @@ export function InventoryGrid({
   }
 
   return (
-    <div className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4', className)}>
+    <motion.div
+      variants={staggerContainer}
+      initial="hidden"
+      animate="visible"
+      className={cn('grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3.5 sm:gap-4', className)}
+    >
       {items.map((invItem) => (
-        <InventoryItemCard
-          key={invItem.id}
-          item={invItem}
-          onEquip={onEquip}
-          onUnequip={onUnequip}
-          onInspect={onInspect}
-          actionLoadingId={actionLoadingId}
-        />
+        <motion.div key={invItem.id} variants={fadeInUp}>
+          <InventoryItemCard
+            item={invItem}
+            onEquip={onEquip}
+            onUnequip={onUnequip}
+            onInspect={onInspect}
+            actionLoadingId={actionLoadingId}
+          />
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 }

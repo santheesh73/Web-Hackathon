@@ -17,8 +17,8 @@ export function StreakCalendar({ days = 28, className }: StreakCalendarProps) {
   if (loading) {
     return (
       <Card className={`p-6 border-border bg-surface ${className}`}>
-        <div className="h-6 w-36 bg-slate-200 animate-pulse rounded mb-4" />
-        <div className="h-16 w-full bg-slate-100 animate-pulse rounded-xl" />
+        <div className="h-6 w-36 bg-surface-muted animate-pulse rounded mb-4" />
+        <div className="h-16 w-full bg-surface-muted animate-pulse rounded-xl" />
       </Card>
     );
   }
@@ -87,7 +87,7 @@ export function StreakCalendar({ days = 28, className }: StreakCalendarProps) {
                       ? day.isRecovery
                         ? 'bg-amber-100 text-amber-800 border border-amber-300 shadow-xs'
                         : 'bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-xs font-bold'
-                      : 'bg-slate-100 text-slate-400 border border-slate-200/60 hover:border-slate-300'
+                      : 'bg-surface-muted text-muted-foreground border border-border/60 hover:border-border'
                   } ${day.isToday ? 'ring-2 ring-primary ring-offset-1 font-bold' : ''}`}
                 >
                   {/* Visual non-color indicator */}
@@ -98,14 +98,14 @@ export function StreakCalendar({ days = 28, className }: StreakCalendarProps) {
                       <Check className="h-3.5 w-3.5 text-white stroke-[2.5]" />
                     )
                   ) : (
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="text-[10px] text-muted-foreground font-mono">
                       {dateObj.getUTCDate()}
                     </span>
                   )}
 
                   {/* Today marker badge */}
                   {day.isToday && (
-                    <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-primary ring-1 ring-white" />
+                    <span className="absolute -top-1 -right-1 h-2 w-2 rounded-full bg-primary ring-1 ring-background" />
                   )}
                 </div>
               );
@@ -125,7 +125,7 @@ export function StreakCalendar({ days = 28, className }: StreakCalendarProps) {
               <span>Recovered</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <span className="h-3 w-3 rounded-sm bg-slate-100 border border-slate-200 inline-block" />
+              <span className="h-3 w-3 rounded-sm bg-surface-muted border border-border inline-block" />
               <span>Missed</span>
             </div>
           </div>

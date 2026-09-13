@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { useRouter } from 'next/navigation';
@@ -216,7 +216,7 @@ export function CharacterCreationWizard() {
             <div
               key={i}
               className={`h-1.5 rounded-full transition-all duration-300 ${
-                i <= step ? 'bg-primary' : 'bg-slate-200'
+                i <= step ? 'bg-primary' : 'bg-surface-muted'
               }`}
             />
           ))}

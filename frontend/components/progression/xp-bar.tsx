@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { motion } from 'framer-motion';
@@ -38,7 +38,7 @@ export function XPBar({ xp = 0, className, showDetails = true }: XPBarProps) {
         aria-valuemin={0}
         aria-valuemax={100}
         aria-label={`Level ${progress.currentLevel} progression`}
-        className="w-full h-3 rounded-full bg-slate-100 border border-slate-200/80 overflow-hidden relative"
+        className="w-full h-3 rounded-full bg-surface-muted border border-border/80 overflow-hidden relative"
       >
         <motion.div
           initial={{ width: 0 }}

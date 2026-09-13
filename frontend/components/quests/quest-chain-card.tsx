@@ -82,7 +82,7 @@ export function QuestChainCard({ chain, className }: QuestChainCardProps) {
             aria-valuemin={0}
             aria-valuemax={100}
             aria-label={`${chain.title} progress`}
-            className="w-full h-2 rounded-full bg-slate-100 border border-slate-200/80 overflow-hidden"
+            className="w-full h-2 rounded-full bg-surface-muted border border-border/80 overflow-hidden"
           >
             <div
               className={`h-full rounded-full transition-all duration-500 ${

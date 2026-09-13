@@ -92,9 +92,9 @@ export default function QuestChainsPage() {
       {/* Content */}
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="h-56 rounded-2xl bg-slate-100 animate-pulse border border-border" />
-          <div className="h-56 rounded-2xl bg-slate-100 animate-pulse border border-border" />
-          <div className="h-56 rounded-2xl bg-slate-100 animate-pulse border border-border" />
+          <div className="h-56 rounded-2xl bg-surface-muted animate-pulse border border-border" />
+          <div className="h-56 rounded-2xl bg-surface-muted animate-pulse border border-border" />
+          <div className="h-56 rounded-2xl bg-surface-muted animate-pulse border border-border" />
         </div>
       ) : filteredChains.length === 0 ? (
         <div className="p-12 text-center border-2 border-dashed border-border rounded-2xl bg-surface/40 space-y-4 max-w-md mx-auto">

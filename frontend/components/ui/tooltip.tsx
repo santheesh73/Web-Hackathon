@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -58,7 +58,7 @@ export function Tooltip({
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.15 }}
             className={cn(
-              'pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-slate-900 px-2.5 py-1 text-xs font-medium text-white shadow-md',
+              'pointer-events-none absolute z-50 whitespace-nowrap rounded-md bg-card border border-border px-2.5 py-1 text-xs font-medium text-card-foreground shadow-md',
               positionClasses[position],
               className
             )}

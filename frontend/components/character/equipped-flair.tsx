@@ -55,21 +55,16 @@ export interface EquippedFlairProps {
 export function EquippedFlair({ equipment, className }: EquippedFlairProps) {
   return (
     <Card variant="default" className={cn('overflow-hidden', className)}>
-      <CardHeader className="pb-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Shield className="w-4 h-4 text-primary" />
-              Equipped Loadout & Cosmetic Flair
-            </CardTitle>
-            <CardDescription className="text-xs">
-              Express your unique identity with equipped avatars, UI themes, achievement badges, and auras.
-            </CardDescription>
-          </div>
+      <CardHeader className="p-3.5 sm:p-4 pb-2 sm:pb-2.5">
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="text-sm font-bold flex items-center gap-2">
+            <Shield className="w-4 h-4 text-primary" />
+            Equipped Loadout
+          </CardTitle>
           <Link href="/inventory">
-            <Button variant="outline" size="sm" className="text-xs gap-1.5 shrink-0">
+            <Button variant="outline" size="sm" className="text-xs gap-1.5 shrink-0 h-7 px-2.5">
               Manage Loadout
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3 h-3" />
             </Button>
           </Link>
         </div>

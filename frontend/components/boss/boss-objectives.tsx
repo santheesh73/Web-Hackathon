@@ -125,7 +125,7 @@ export function BossObjectives({
                 </div>
 
                 {/* Progress bar inside objective */}
-                <div className="w-full h-1.5 rounded-full bg-slate-100 dark:bg-slate-800 overflow-hidden mt-2">
+                <div className="w-full h-1.5 rounded-full bg-surface-muted overflow-hidden mt-2">
                   <div
                     className="h-full bg-amber-500 rounded-full transition-all duration-300"
                     style={{ width: `${obj.progressPercent}%` }}

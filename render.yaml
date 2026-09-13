@@ -1,0 +1,58 @@
+services:
+  # ============================================================================
+  # 1. Fastify Backend API Service
+  # ============================================================================
+  - type: web
+    name: life-rpg-backend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build:backend
+    startCommand: npm run start:backend
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 4000
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: DATABASE_URL
+        sync: false
+      - key: FRONTEND_URL
+        fromService:
+          type: web
+          name: life-rpg-frontend
+          property: host
+      - key: CORS_ORIGIN
+        value: '*'
+
+  # ============================================================================
+  # 2. Next.js Frontend Web Application
+  # ============================================================================
+  - type: web
+    name: life-rpg-frontend
+    env: node
+    plan: free
+    buildCommand: npm install && npm run build:frontend
+    startCommand: npm run start:frontend
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        sync: false
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        sync: false
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          type: web
+          name: life-rpg-backend
+          property: host
+      - key: NEXT_PUBLIC_SITE_URL
+        fromService:
+          type: web
+          name: life-rpg-frontend
+          property: host

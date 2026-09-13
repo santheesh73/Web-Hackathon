@@ -20,9 +20,9 @@ export function StreakCard({ className }: StreakCardProps) {
   if (loading) {
     return (
       <Card className={`p-6 border-border bg-surface ${className}`}>
-        <div className="h-6 w-28 bg-slate-200 animate-pulse rounded mb-4" />
-        <div className="h-10 w-24 bg-slate-200 animate-pulse rounded mb-2" />
-        <div className="h-4 w-40 bg-slate-200 animate-pulse rounded" />
+        <div className="h-6 w-28 bg-surface-muted animate-pulse rounded mb-4" />
+        <div className="h-10 w-24 bg-surface-muted animate-pulse rounded mb-2" />
+        <div className="h-4 w-40 bg-surface-muted animate-pulse rounded" />
       </Card>
     );
   }
@@ -96,7 +96,7 @@ export function StreakCard({ className }: StreakCardProps) {
               className={`h-12 w-12 rounded-2xl flex items-center justify-center transition-all ${
                 currentStreak > 0
                   ? 'bg-gradient-to-br from-amber-400 to-orange-500 text-white shadow-md'
-                  : 'bg-slate-100 text-slate-400'
+                  : 'bg-surface-muted text-muted-foreground'
               }`}
             >
               <Flame className={`h-6 w-6 ${currentStreak > 0 ? 'animate-pulse' : ''}`} />

@@ -12,6 +12,11 @@
     "dev:backend": "npm run dev --workspace=backend",
     "dev:frontend": "npm run dev --workspace=frontend",
     "build": "npm run build --workspaces",
+    "build:backend": "npm run build --workspace=backend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "start": "concurrently -k -n \"backend,frontend\" -c \"blue,green\" \"npm run start --workspace=backend\" \"npm run start --workspace=frontend\"",
+    "start:backend": "npm run start --workspace=backend",
+    "start:frontend": "npm run start --workspace=frontend",
     "lint": "npm run lint --workspaces",
     "test": "npm run test --workspace=backend",
     "format": "prettier --write \"**/*.{ts,tsx,js,json,md}\""

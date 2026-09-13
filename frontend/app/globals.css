@@ -1,14 +1,24 @@
-﻿@tailwind base;
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
-  :root {
+  :root,
+  [data-theme="light"] {
     --background: 210 40% 98%;
     --foreground: 222 47% 11%;
+    --foreground-secondary: 215 16% 47%;
 
     --surface: 0 0% 100%;
     --surface-muted: 214 32% 96%;
+    --surface-secondary: 214 32% 94%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --overlay: 222 47% 11%;
+    --progress: 238 77% 59%;
+    --navigation: 0 0% 100%;
 
     --border: 214 32% 91%;
     --border-subtle: 214 32% 95%;
@@ -35,8 +45,98 @@
 
     --danger: 0 84% 60%;
     --danger-foreground: 0 0% 100%;
+    --error: 0 84% 60%;
 
     --radius: 0.75rem;
+  }
+
+  [data-theme="dark"],
+  .dark:not([data-theme="orange"]):not([data-theme="light"]) {
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
+    --foreground-secondary: 215 20% 65%;
+
+    --surface: 222 40% 11%;
+    --surface-muted: 222 38% 15%;
+    --surface-secondary: 222 38% 18%;
+
+    --card: 222 40% 11%;
+    --card-foreground: 210 40% 98%;
+
+    --overlay: 222 47% 4%;
+    --progress: 234 89% 68%;
+    --navigation: 222 40% 11%;
+
+    --border: 222 30% 19%;
+    --border-subtle: 222 30% 14%;
+    --input: 222 30% 19%;
+    --ring: 234 89% 68%;
+
+    --primary: 234 89% 68%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 222 38% 16%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 222 38% 15%;
+    --muted-foreground: 215 20% 65%;
+
+    --accent: 38 92% 50%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 158 64% 42%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+    --error: 0 84% 60%;
+  }
+
+  [data-theme="orange"] {
+    --background: 24 15% 8%;
+    --foreground: 30 20% 98%;
+    --foreground-secondary: 24 10% 68%;
+
+    --surface: 24 12% 12%;
+    --surface-muted: 24 10% 17%;
+    --surface-secondary: 24 10% 21%;
+
+    --card: 24 12% 12%;
+    --card-foreground: 30 20% 98%;
+
+    --overlay: 24 20% 5%;
+    --progress: 24 95% 53%;
+    --navigation: 24 12% 12%;
+
+    --border: 24 12% 20%;
+    --border-subtle: 24 12% 16%;
+    --input: 24 12% 20%;
+    --ring: 24 95% 53%;
+
+    --primary: 24 95% 53%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 24 10% 17%;
+    --secondary-foreground: 30 20% 98%;
+
+    --muted: 24 10% 17%;
+    --muted-foreground: 24 10% 64%;
+
+    --accent: 24 95% 53%;
+    --accent-foreground: 0 0% 100%;
+
+    --success: 158 64% 42%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+
+    --danger: 0 84% 60%;
+    --danger-foreground: 0 0% 100%;
+    --error: 0 84% 60%;
   }
 }
 
@@ -47,6 +147,13 @@
   body {
     @apply bg-background text-foreground antialiased;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    transition: background-color 0.2s ease, color 0.15s ease;
+  }
+  header,
+  aside,
+  main,
+  nav {
+    transition: background-color 0.2s ease, border-color 0.2s ease;
   }
 }
 

@@ -1,7 +1,8 @@
-﻿'use client';
+'use client';
 
 import * as React from 'react';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
 import { Swords, Search, Plus, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
 import { useQuests, type QuestFilter } from '@/features/quests/use-quests';
 import { QuestCard } from './quest-card';
@@ -11,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
+import { staggerContainer, fadeInUp } from '@/lib/motion';
 import type { QuestCompletionResult } from '@/../src/shared/types/quest';
 
 export function QuestList() {
@@ -66,25 +68,20 @@ export function QuestList() {
   const completedCount = allQuests.filter((q) => q.status === 'COMPLETED').length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-5">
       {/* Header with Title and Create Action */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/70">
-        <div>
-          <div className="flex items-center gap-2">
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-              Quest Board
-            </h1>
-            <Badge variant="rpg" size="sm">
-              {activeCount} Active
-            </Badge>
-          </div>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            Turn your everyday objectives into completed RPG milestones.
-          </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-border/70">
+        <div className="flex items-center gap-2.5">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground">
+            Quest Board
+          </h1>
+          <Badge variant="rpg" size="sm">
+            {activeCount} Active
+          </Badge>
         </div>
 
         <Link href="/quests/create">
-          <Button variant="primary" icon={<Plus className="h-4 w-4" />}>
+          <Button variant="primary" size="sm" icon={<Plus className="h-3.5 w-3.5" />}>
             Create Quest
           </Button>
         </Link>
@@ -173,16 +170,22 @@ export function QuestList() {
           )}
         </div>
       ) : (
-        <div className="space-y-3">
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="space-y-2.5"
+        >
           {displayedQuests.map((quest) => (
-            <QuestCard
-              key={quest.id}
-              quest={quest}
-              onComplete={handleComplete}
-              completing={completingId === quest.id}
-            />
+            <motion.div key={quest.id} variants={fadeInUp}>
+              <QuestCard
+                quest={quest}
+                onComplete={handleComplete}
+                completing={completingId === quest.id}
+              />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {/* Completion Modal */}

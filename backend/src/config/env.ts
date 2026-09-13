@@ -10,6 +10,9 @@ const envSchema = z.object({
   HOST: z.string().default('0.0.0.0'),
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   DATABASE_URL: z.string().optional(),
+  FRONTEND_URL: z.string().optional(),
+  CORS_ORIGIN: z.string().optional(),
+  API_URL: z.string().optional(),
 });
 
 export const env = envSchema.parse(process.env);

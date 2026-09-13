@@ -19,9 +19,33 @@ export function buildApp(): FastifyInstance {
     logger: false,
   });
 
+  const allowedOrigins = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : []),
+    ...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim()) : []),
+  ];
+
   app.register(cors, {
-    origin: ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    origin: (origin, cb) => {
+      // Allow requests with no origin (curl, server-to-server, health checks, mobile apps)
+      if (!origin) return cb(null, true);
+      // In development or if wildcard configured, allow all
+      if (process.env.CORS_ORIGIN === '*' || process.env.NODE_ENV !== 'production') {
+        return cb(null, true);
+      }
+      // Check explicit allowed origins list
+      if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+        return cb(null, true);
+      }
+      // Allow Vercel preview URLs or local network
+      if (origin.endsWith('.vercel.app') || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        return cb(null, true);
+      }
+      return cb(new Error(`Origin ${origin} not allowed by CORS`), false);
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
   });
 
   // Health endpoint
@@ -37,6 +61,7 @@ export function buildApp(): FastifyInstance {
 
   // Root endpoint: provides service status and guides browser visitors to the frontend app
   app.get('/', async (request, reply) => {
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
     const accept = request.headers.accept || '';
     if (accept.includes('text/html')) {
       return reply
@@ -47,7 +72,7 @@ export function buildApp(): FastifyInstance {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="0; url=http://localhost:3000/" />
+  <meta http-equiv="refresh" content="0; url=${frontendUrl}/" />
   <title>LIFE RPG API &bull; Redirecting to Web App...</title>
   <style>
     body {
@@ -115,14 +140,14 @@ export function buildApp(): FastifyInstance {
       color: #64748b;
     }
   </style>
-  <script>window.location.href = "http://localhost:3000/";</script>
+  <script>window.location.href = "${frontendUrl}/";</script>
 </head>
 <body>
   <div class="card">
-    <div class="badge">&#x25CF; Fastify API Live (Port 4000)</div>
+    <div class="badge">&#x25CF; Fastify API Live</div>
     <h1>LIFE RPG Backend Engine</h1>
-    <p>This port hosts the REST API and game progression engine. The interactive web application is running on port 3000.</p>
-    <a href="http://localhost:3000/" class="btn">Launch LIFE RPG Web App &rarr;</a>
+    <p>This server hosts the REST API and game progression engine. Access the interactive web application below:</p>
+    <a href="${frontendUrl}/" class="btn">Launch LIFE RPG Web App &rarr;</a>
     <div class="footnote">Redirecting automatically...</div>
   </div>
 </body>
@@ -133,9 +158,9 @@ export function buildApp(): FastifyInstance {
       service: 'life-rpg-api',
       status: 'ok',
       version: '0.1.0',
-      frontend: 'http://localhost:3000',
-      health: 'http://localhost:4000/health',
-      message: 'LIFE RPG Backend API is running. The web application is hosted at http://localhost:3000',
+      frontend: frontendUrl,
+      health: `${process.env.API_URL || 'http://localhost:4000'}/health`,
+      message: `LIFE RPG Backend API is running. The web application is hosted at ${frontendUrl}`,
     });
   });
 
